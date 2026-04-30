@@ -1,0 +1,844 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CV Proje Rehberi — Ufuk Kantarcı</title>
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+<style>
+:root {
+  --bg: #f0eeeb; --white: #f7f6f3; --sidebar: #1c1c1e;
+  --accent: #4a7fa5; --text: #1a1a1a; --text-mid: #555;
+  --text-dim: #999; --border: #ddd9d4; --border-dark: #c0bbb4;
+  --sans: "Segoe UI", sans-serif; --mono: "Consolas", monospace;
+  --green: #22c55e; --yellow: #f59e0b; --red: #ef4444;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: var(--bg); color: var(--text); font-family: var(--sans); font-size: 14px; }
+
+.topbar {
+  background: var(--sidebar); color: #fff; padding: 1rem 2rem;
+  display: flex; justify-content: space-between; align-items: center;
+  position: sticky; top: 0; z-index: 100;
+}
+.topbar h1 { font-size: 1rem; font-weight: 700; letter-spacing: 0.05em; }
+.topbar .sub { font-size: 0.65rem; color: rgba(255,255,255,0.4); font-family: var(--mono); }
+.btn-export {
+  background: var(--accent); color: #fff; border: none; padding: 0.5rem 1.2rem;
+  font-size: 0.75rem; font-weight: 700; letter-spacing: 0.08em; cursor: pointer;
+  border-radius: 3px; font-family: var(--sans);
+}
+.btn-export:hover { background: #3a6f95; }
+
+.drive-status {
+  display: flex; align-items: center; gap: 0.5rem;
+  font-size: 0.68rem; font-family: var(--mono); color: rgba(255,255,255,0.5);
+}
+.drive-dot { width: 7px; height: 7px; border-radius: 50%; background: #555; flex-shrink: 0; }
+.drive-dot.connected { background: var(--green); box-shadow: 0 0 4px var(--green); }
+.drive-dot.saving { background: var(--yellow); }
+.drive-dot.error { background: var(--red); }
+.btn-drive {
+  background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.8); border: 1px solid rgba(255,255,255,0.2);
+  padding: 0.3rem 0.7rem; font-size: 0.65rem; font-weight: 700; letter-spacing: 0.06em;
+  cursor: pointer; border-radius: 3px; font-family: var(--mono); white-space: nowrap;
+}
+.btn-drive:hover { background: rgba(255,255,255,0.18); }
+
+.stats-bar {
+  background: var(--white); border-bottom: 1px solid var(--border);
+  padding: 0.6rem 2rem; display: flex; gap: 2rem; align-items: center;
+}
+.stat-item { font-size: 0.7rem; color: var(--text-dim); font-family: var(--mono); }
+.stat-item span { color: var(--accent); font-weight: 700; }
+
+.container { max-width: 900px; margin: 0 auto; padding: 1.5rem 2rem; }
+
+.guide-box {
+  background: var(--sidebar); color: #fff; border-radius: 4px;
+  padding: 1.5rem; margin-bottom: 2rem;
+}
+.guide-box h2 { font-size: 0.8rem; letter-spacing: 0.15em; color: var(--accent); margin-bottom: 0.8rem; }
+.guide-box ol { padding-left: 1.2rem; }
+.guide-box li { font-size: 0.82rem; color: rgba(255,255,255,0.75); margin-bottom: 0.4rem; line-height: 1.6; }
+.guide-box li strong { color: #fff; }
+
+.year-section { margin-bottom: 2.5rem; }
+.year-title {
+  font-size: 1.8rem; font-weight: 800; color: var(--sidebar);
+  border-bottom: 3px solid var(--accent); padding-bottom: 0.4rem;
+  margin-bottom: 1rem; letter-spacing: 0.02em;
+}
+
+.month-label {
+  font-family: var(--mono); font-size: 0.6rem; color: var(--accent);
+  letter-spacing: 0.15em; margin: 1.2rem 0 0.4rem; text-transform: uppercase;
+}
+
+.project-card {
+  background: var(--white); border: 1px solid var(--border);
+  border-radius: 3px; margin-bottom: 4px; overflow: hidden;
+  transition: border-color 0.15s;
+}
+.project-card.done { border-left: 3px solid var(--green); }
+.project-card.skip { border-left: 3px solid var(--border-dark); opacity: 0.6; }
+.project-card.maybe { border-left: 3px solid var(--yellow); }
+
+.card-header {
+  display: flex; align-items: center; padding: 0.7rem 1rem;
+  cursor: pointer; gap: 0.8rem; user-select: none;
+}
+.card-header:hover { background: rgba(74,127,165,0.05); }
+
+.card-num { font-family: var(--mono); font-size: 0.55rem; color: var(--text-dim); width: 28px; flex-shrink: 0; }
+.card-name { font-weight: 700; font-size: 0.85rem; flex: 1; }
+.card-sector { font-size: 0.68rem; color: var(--text-dim); font-family: var(--mono); }
+.card-status { font-size: 0.6rem; font-family: var(--mono); padding: 0.15rem 0.5rem; border-radius: 2px; }
+.status-empty { background: var(--bg); color: var(--text-dim); }
+.status-yes { background: #dcfce7; color: #16a34a; }
+.status-no { background: #f1f5f9; color: #94a3b8; }
+.status-maybe { background: #fef9c3; color: #ca8a04; }
+.card-chevron { color: var(--text-dim); font-size: 0.7rem; transition: transform 0.2s; }
+.card-chevron.open { transform: rotate(180deg); }
+
+.card-body { display: none; padding: 1rem 1rem 1.2rem; border-top: 1px solid var(--border); }
+.card-body.open { display: block; }
+
+.form-row { margin-bottom: 0.9rem; }
+.form-row label {
+  display: block; font-size: 0.6rem; font-weight: 700; color: var(--text-dim);
+  letter-spacing: 0.12em; margin-bottom: 0.3rem; font-family: var(--mono);
+}
+.form-row label span { color: var(--accent); }
+.form-row textarea, .form-row input[type="text"], .form-row input[type="url"] {
+  width: 100%; background: var(--bg); border: 1.5px solid var(--border);
+  color: var(--text); padding: 0.55rem 0.75rem; font-family: var(--sans);
+  font-size: 0.83rem; outline: none; border-radius: 3px; resize: vertical;
+  transition: border-color 0.15s;
+}
+.form-row textarea:focus, .form-row input:focus { border-color: var(--accent); background: #fff; }
+.form-row textarea { min-height: 70px; }
+
+.radio-row { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+.radio-opt input { display: none; }
+.radio-opt label {
+  display: block; padding: 0.3rem 0.8rem; border: 1.5px solid var(--border);
+  border-radius: 100px; font-size: 0.72rem; font-weight: 700; cursor: pointer;
+  letter-spacing: 0.06em; transition: all 0.12s; font-family: var(--sans);
+}
+.radio-opt input[value="EVET"]:checked + label { background: #dcfce7; border-color: var(--green); color: #15803d; }
+.radio-opt input[value="HAYIR"]:checked + label { background: #f1f5f9; border-color: #94a3b8; color: #475569; }
+.radio-opt input[value="BELKI"]:checked + label { background: #fef9c3; border-color: var(--yellow); color: #92400e; }
+
+.stars { display: flex; gap: 4px; }
+.star { font-size: 1.3rem; cursor: pointer; color: var(--border-dark); transition: color 0.1s; }
+.star.on { color: #f59e0b; }
+
+.hint { font-size: 0.68rem; color: var(--text-dim); margin-top: 0.25rem; font-style: italic; }
+
+.photo-section { display: flex; flex-direction: column; gap: 0.5rem; }
+.photo-thumbs { display: flex; flex-wrap: wrap; gap: 0.5rem; min-height: 0; }
+.thumb-wrap { position: relative; }
+.thumb-img { width: 80px; height: 60px; object-fit: cover; border-radius: 3px; border: 1px solid var(--border); display: block; cursor: pointer; }
+.thumb-img:hover { opacity: 0.85; }
+.thumb-del { position: absolute; top: 2px; right: 2px; background: rgba(0,0,0,0.65); color: #fff; border: none; border-radius: 2px; font-size: 0.58rem; cursor: pointer; padding: 1px 4px; line-height: 1.2; }
+.thumb-name { font-size: 0.58rem; color: var(--text-dim); max-width: 80px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; text-align: center; margin-top: 2px; }
+.photo-upload-btn { display: inline-block; background: var(--sidebar); color: rgba(255,255,255,0.85); padding: 0.35rem 0.8rem; font-size: 0.7rem; border-radius: 3px; cursor: pointer; font-family: var(--sans); letter-spacing: 0.05em; border: none; }
+.photo-upload-btn:hover { background: #333; }
+.photo-link-input { font-size: 0.75rem; padding: 0.35rem 0.6rem; border: 1px solid var(--border); border-radius: 3px; font-family: var(--sans); background: var(--white); color: var(--text); width: 100%; }
+.photo-link-input::placeholder { color: var(--text-dim); }
+
+.save-btn {
+  background: var(--sidebar); color: #fff; border: none; padding: 0.45rem 1rem;
+  font-size: 0.72rem; font-weight: 700; letter-spacing: 0.08em; cursor: pointer;
+  border-radius: 3px; margin-top: 0.5rem; font-family: var(--sans);
+}
+.save-btn:hover { background: #333; }
+.saved-msg { font-size: 0.65rem; color: var(--green); font-family: var(--mono); margin-left: 0.5rem; display: none; }
+
+.export-modal {
+  display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6);
+  z-index: 200; align-items: center; justify-content: center;
+}
+.export-modal.show { display: flex; }
+.export-box {
+  background: var(--white); border-radius: 4px; width: 90%; max-width: 680px;
+  max-height: 80vh; display: flex; flex-direction: column;
+}
+.export-head {
+  background: var(--sidebar); color: #fff; padding: 1rem 1.5rem;
+  display: flex; justify-content: space-between; align-items: center;
+  border-radius: 4px 4px 0 0;
+}
+.export-head h3 { font-size: 0.85rem; letter-spacing: 0.05em; }
+.close-btn { background: none; border: none; color: rgba(255,255,255,0.5); font-size: 1.2rem; cursor: pointer; }
+.export-content { padding: 1.5rem; overflow-y: auto; flex: 1; }
+.export-textarea {
+  width: 100%; height: 350px; font-family: var(--mono); font-size: 0.72rem;
+  border: 1px solid var(--border); padding: 1rem; resize: none; background: var(--bg);
+  border-radius: 3px; color: var(--text);
+}
+.export-actions { padding: 1rem 1.5rem; border-top: 1px solid var(--border); display: flex; gap: 0.5rem; }
+.copy-btn {
+  background: var(--accent); color: #fff; border: none; padding: 0.5rem 1.2rem;
+  font-size: 0.75rem; font-weight: 700; cursor: pointer; border-radius: 3px; font-family: var(--sans);
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div>
+    <div class="h1">UFUK KANTARCI — CV PROJELERİ REHBERİ</div>
+    <div class="sub">Her projeyi doldurun → Export edin → Claude'a gönderin</div>
+  </div>
+  <div style="display:flex;gap:0.8rem;align-items:center;">
+    <div class="drive-status">
+      <div class="drive-dot" id="driveDot"></div>
+      <span id="driveText">Drive bağlı değil</span>
+      <button class="btn-drive" id="driveBtn" onclick="connectDrive()">BAĞLAN</button>
+    </div>
+    <button class="btn-export" onclick="openExport()">DIŞA AKTAR</button>
+  </div>
+</div>
+
+<div class="stats-bar" id="statsBar">
+  <div class="stat-item">Toplam: <span id="totalCount">0</span> proje</div>
+  <div class="stat-item">Tamamlanan: <span id="doneCount">0</span></div>
+  <div class="stat-item">CV'ye Ekle: <span id="yesCount">0</span></div>
+  <div class="stat-item">Belki: <span id="maybeCount">0</span></div>
+  <div class="stat-item">Atlanan: <span id="noCount">0</span></div>
+</div>
+
+<div class="container">
+
+<div class="guide-box">
+  <h2>NASIL KULLANILIR?</h2>
+  <ol>
+    <li><strong>Her proje kartına tıklayın</strong> — açılan formda soruları cevaplayın.</li>
+    <li><strong>"CV'YE EKLE?"</strong> kısmını mutlaka seçin — EVET / HAYIR / BELKI.</li>
+    <li><strong>Gurur puanı verin</strong> — 1=Standart tasarım, 5=Gerçekten gurur duyuyorum.</li>
+    <li><strong>YENİLİK bölümü çok önemli</strong> — "Bu projede ne farklı yaptım?" sorusunu cevaplayın. Standartsa boş bırakın.</li>
+    <li>Fotoğraflarınız Drive'daysa <strong>linki yapıştırın</strong>.</li>
+    <li>Kaydet'e basın, <strong>otomatik kaydedilir</strong> (sayfayı kapatsanız bile).</li>
+    <li>Bitince <strong>DIŞA AKTAR</strong>'a tıklayın, çıkan metni kopyalayın ve Claude'a gönderin.</li>
+  </ol>
+</div>
+
+<div id="projectList"></div>
+
+</div>
+
+<div class="export-modal" id="exportModal">
+  <div class="export-box">
+    <div class="export-head">
+      <h3>DIŞA AKTAR — Claude'a Gönderilecek İçerik</h3>
+      <button class="close-btn" onclick="closeExport()">✕</button>
+    </div>
+    <div class="export-content">
+      <p style="font-size:0.75rem;color:var(--text-mid);margin-bottom:0.8rem;">Bu metni kopyalayın ve Claude ile konuşmanıza yapıştırın.</p>
+      <textarea class="export-textarea" id="exportText" readonly></textarea>
+    </div>
+    <div class="export-actions">
+      <button class="copy-btn" onclick="copyExport()">KOPYALA</button>
+      <span style="font-size:0.7rem;color:var(--text-dim);align-self:center;" id="copyMsg"></span>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── Google Drive Sync ─────────────────────────────────────────────
+const GDRIVE_CLIENT_ID = '691975775855-k14ht5id9055m82q819afp4tg51edrbo.apps.googleusercontent.com';
+const GDRIVE_SCOPE = 'https://www.googleapis.com/auth/drive.file';
+const GDRIVE_FILE_NAME = 'cv_rehber_data.json';
+
+let driveToken = null;
+let driveFileId = null;
+let driveSaveTimer = null;
+let tokenClient = null;
+
+function initGIS() {
+  if (!window.google) return;
+  tokenClient = google.accounts.oauth2.initTokenClient({
+    client_id: GDRIVE_CLIENT_ID,
+    scope: GDRIVE_SCOPE,
+    callback: async (resp) => {
+      if (resp.error) { setDriveStatus('error', 'Bağlantı hatası'); return; }
+      driveToken = resp.access_token;
+      setDriveStatus('saving', 'Veriler yükleniyor...');
+      await driveLoad();
+    }
+  });
+}
+
+function connectDrive() {
+  if (!tokenClient) { alert('Google API henüz yüklenmedi, birkaç saniye bekle.'); return; }
+  tokenClient.requestAccessToken();
+}
+
+function setDriveStatus(state, text) {
+  const dot = document.getElementById('driveDot');
+  const txt = document.getElementById('driveText');
+  const btn = document.getElementById('driveBtn');
+  dot.className = 'drive-dot' + (state === 'connected' ? ' connected' : state === 'saving' ? ' saving' : state === 'error' ? ' error' : '');
+  txt.textContent = text;
+  btn.style.display = state === 'connected' || state === 'saving' ? 'none' : 'inline-block';
+}
+
+async function driveRequest(url, options = {}) {
+  const res = await fetch(url, {
+    ...options,
+    headers: { Authorization: 'Bearer ' + driveToken, ...(options.headers || {}) }
+  });
+  if (res.status === 401) { driveToken = null; setDriveStatus('', 'Oturum sona erdi'); return null; }
+  return res;
+}
+
+async function findDriveFile() {
+  const res = await driveRequest(
+    `https://www.googleapis.com/drive/v3/files?q=name%3D'${GDRIVE_FILE_NAME}'+and+trashed%3Dfalse&spaces=drive&fields=files(id,name)`
+  );
+  if (!res) return null;
+  const data = await res.json();
+  return (data.files && data.files[0]) ? data.files[0].id : null;
+}
+
+async function readDriveFile(fileId) {
+  const res = await driveRequest(`https://www.googleapis.com/drive/v3/files/${fileId}?alt=media`);
+  if (!res || !res.ok) return null;
+  try { return await res.json(); } catch(e) { return null; }
+}
+
+async function writeDriveFile(content) {
+  const body = JSON.stringify(content);
+  if (driveFileId) {
+    await driveRequest(
+      `https://www.googleapis.com/upload/drive/v3/files/${driveFileId}?uploadType=media`,
+      { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body }
+    );
+  } else {
+    const meta = JSON.stringify({ name: GDRIVE_FILE_NAME, mimeType: 'application/json' });
+    const form = new FormData();
+    form.append('metadata', new Blob([meta], { type: 'application/json' }));
+    form.append('file', new Blob([body], { type: 'application/json' }));
+    const res = await driveRequest(
+      'https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&fields=id',
+      { method: 'POST', body: form }
+    );
+    if (res && res.ok) { const d = await res.json(); driveFileId = d.id; }
+  }
+}
+
+function getAllLocalData() {
+  const result = {};
+  PROJECTS.forEach((_, i) => {
+    const key = projectKey(i);
+    const d = getData(key);
+    if (Object.keys(d).length > 0) result[key] = d;
+  });
+  return result;
+}
+
+async function driveLoad() {
+  driveFileId = await findDriveFile();
+  if (driveFileId) {
+    const saved = await readDriveFile(driveFileId);
+    if (saved) {
+      Object.entries(saved).forEach(([k, v]) => {
+        localStorage.setItem('cvdata_' + k, JSON.stringify(v));
+      });
+      buildList();
+    }
+  }
+  setDriveStatus('connected', 'Drive bağlı ✓');
+}
+
+function scheduleDriveSave() {
+  if (!driveToken) return;
+  clearTimeout(driveSaveTimer);
+  setDriveStatus('saving', 'Kaydediliyor...');
+  driveSaveTimer = setTimeout(async () => {
+    await writeDriveFile(getAllLocalData());
+    setDriveStatus('connected', 'Drive bağlı ✓');
+  }, 1500);
+}
+
+window.addEventListener('load', () => {
+  setTimeout(initGIS, 800);
+});
+// ─────────────────────────────────────────────────────────────────
+
+const PROJECTS = [
+  // 2026
+  {year:"2026", month:"Nisan", name:"ADOKSAN — MODÜL", sector:"Otomotiv / Döküm"},
+  {year:"2026", month:"Nisan", name:"TEYMUR TEKSTİL", sector:"Tekstil"},
+  {year:"2026", month:"Nisan", name:"DİSPOSET", sector:""},
+  {year:"2026", month:"Nisan", name:"RED SEA — MISIR", sector:"İhracat / Mısır"},
+  {year:"2026", month:"Nisan", name:"THY", sector:"Havacılık"},
+  {year:"2026", month:"Nisan", name:"MARSA MARINE", sector:"Denizcilik"},
+  {year:"2026", month:"Mart", name:"BAYKAR", sector:"Savunma Sanayi"},
+  {year:"2026", month:"Mart", name:"YKK", sector:"Tekstil Aksesuar"},
+  {year:"2026", month:"Mart", name:"INDUSTRIAL PLASTIC RECYCLING — ROMANYA", sector:"İhracat / Romanya"},
+  {year:"2026", month:"Mart", name:"CSS KOLLEKTİF GEMİ", sector:"Denizcilik"},
+  {year:"2026", month:"Mart", name:"ADOKSAN — ULTRASONİK BANYO", sector:"Otomotiv / Döküm"},
+  {year:"2026", month:"Mart", name:"BEŞİKTAŞ SHİPYARD", sector:"Denizcilik"},
+  {year:"2026", month:"Şubat", name:"TÜBİTAK PROJESİ", sector:"Ar-Ge"},
+  {year:"2026", month:"Ocak", name:"GRATİS ADANA — KASA YIKAMA", sector:"Lojistik"},
+  {year:"2026", month:"Ocak", name:"AKO JANT — 5 YIKAMALI", sector:"Otomotiv"},
+  // 2025
+  {year:"2025", month:"Aralık", name:"AKO JANT — REVİZYON", sector:"Otomotiv"},
+  {year:"2025", month:"Aralık", name:"MOST FOOD", sector:"Gıda"},
+  {year:"2025", month:"Kasım", name:"ZUBER — KASA & KALIP YIKAMA", sector:"Gıda (Alterna)"},
+  {year:"2025", month:"Kasım", name:"HARİBO — SON REVİZYON", sector:"Gıda (Şeker)"},
+  {year:"2025", month:"Ekim", name:"SEÇİL KAUÇUK", sector:"Otomotiv / Kauçuk"},
+  {year:"2025", month:"Eylül", name:"GRATİS — KASA YIKAMA", sector:"Lojistik"},
+  {year:"2025", month:"Eylül", name:"UKİNOX — EVYE YIKAMA", sector:"Mutfak / Metal"},
+  {year:"2025", month:"Eylül", name:"LİBYA AL ZAHRA", sector:"İhracat / Libya"},
+  {year:"2025", month:"Ağustos", name:"GENERAL TEKSTİL", sector:"Tekstil"},
+  {year:"2025", month:"Ağustos", name:"MAKEL YALITIM", sector:"İnşaat / Yalıtım"},
+  {year:"2025", month:"Ağustos", name:"TORİ PEN PVC", sector:"PVC / Yapı"},
+  {year:"2025", month:"Temmuz", name:"TATBAK — KASA YIKAMA", sector:"Gıda"},
+  {year:"2025", month:"Temmuz", name:"İÇDAŞ", sector:"Denizcilik / Çelik"},
+  {year:"2025", month:"Temmuz", name:"TP REFLEX", sector:""},
+  {year:"2025", month:"Haziran", name:"FENOL KİMYA — CEZAYİR", sector:"İhracat / Cezayir"},
+  {year:"2025", month:"Mayıs", name:"HARİBO", sector:"Gıda (Şeker)"},
+  {year:"2025", month:"Mayıs", name:"ELA ELEKTRONİK", sector:"Elektronik"},
+  {year:"2025", month:"Nisan", name:"SENA YALDIZ KUYUMCU", sector:"Kuyumculuk"},
+  {year:"2025", month:"Mart", name:"PAKEL GIDA", sector:"Gıda"},
+  {year:"2025", month:"Şubat", name:"AST KANİSTER — VARİL YIKAMA", sector:"Kimya / Gıda"},
+  {year:"2025", month:"Şubat", name:"AKO JANT", sector:"Otomotiv"},
+  {year:"2025", month:"Şubat", name:"STEELSA TIBBİ ALETLER", sector:"Medikal"},
+  {year:"2025", month:"Ocak", name:"AK DORUK", sector:""},
+  {year:"2025", month:"Ocak", name:"ELİT ELEKTRONİK", sector:"Elektronik"},
+  {year:"2025", month:"Ocak", name:"SMART ENERJİ", sector:"Enerji"},
+  // 2024
+  {year:"2024", month:"Aralık", name:"ADOKSAN — ROBOT TAŞIMALI ULTRASONİK", sector:"Otomotiv / Döküm"},
+  {year:"2024", month:"Aralık", name:"DİVAN — ÇİKOLATA KALIP YIKAMA", sector:"Gıda (Çikolata)"},
+  {year:"2024", month:"Aralık", name:"ÖZGÜR YAPI", sector:"PVC / Yapı"},
+  {year:"2024", month:"Aralık", name:"AST KANİSTER", sector:"Kimya"},
+  {year:"2024", month:"Aralık", name:"AZERBAYCAN PVC TECHNOLINE", sector:"İhracat / Azerbaycan"},
+  {year:"2024", month:"Kasım", name:"KERVAN — HAVA BIÇAĞI", sector:"Gıda"},
+  {year:"2024", month:"Kasım", name:"ÖZ ALTIN KUYUMCULUK", sector:"Kuyumculuk"},
+  {year:"2024", month:"Ekim", name:"SANVER — ÖN TASARIM 2", sector:"Otomotiv"},
+  {year:"2024", month:"Ekim", name:"KROM EVYE", sector:"Mutfak / Metal"},
+  {year:"2024", month:"Ekim", name:"SERVO MERKEZİ", sector:""},
+  {year:"2024", month:"Ekim", name:"SARL KERNOU — CEZAYİR", sector:"İhracat / Cezayir"},
+  {year:"2024", month:"Ekim", name:"OSAKA", sector:"Otomotiv"},
+  {year:"2024", month:"Eylül", name:"AYDENİZ TARIM", sector:"Gıda / Tarım"},
+  {year:"2024", month:"Eylül", name:"2A MÜHENDİSLİK", sector:""},
+  {year:"2024", month:"Ağustos", name:"INNOCAP", sector:""},
+  {year:"2024", month:"Temmuz", name:"SUPER COMPANY PVC", sector:"PVC / İnşaat"},
+  {year:"2024", month:"Temmuz", name:"UMUT DENİZCİLİK", sector:"Denizcilik"},
+  {year:"2024", month:"Haziran", name:"BMT GROUP BİYOTEKNOLOJİ", sector:"Biyoteknoloji"},
+  {year:"2024", month:"Mayıs", name:"İMSAN PRES", sector:"Otomotiv / Metal"},
+  {year:"2024", month:"Nisan", name:"CEZAYİR GROUPE LAIT", sector:"İhracat / Cezayir"},
+  {year:"2024", month:"Nisan", name:"HARİBO", sector:"Gıda (Şeker)"},
+  {year:"2024", month:"Mart", name:"TEKNOCAST", sector:"Döküm"},
+  {year:"2024", month:"Mart", name:"İSTANBUL GÖZLÜK (OPTİK)", sector:"Optik"},
+  {year:"2024", month:"Mart", name:"REFKAR", sector:""},
+  {year:"2024", month:"Mart", name:"AK ENERJİ", sector:"Enerji"},
+  {year:"2024", month:"Mart", name:"WESPY MAKİNE", sector:""},
+  {year:"2024", month:"Şubat", name:"ISI KAZANIM PROJESİ", sector:"Enerji / Ar-Ge"},
+  {year:"2024", month:"Şubat", name:"EUROPEN", sector:"PVC / Yapı"},
+  {year:"2024", month:"Şubat", name:"KERVAN — MISIR PROJESİ", sector:"Gıda / İhracat"},
+  {year:"2024", month:"Şubat", name:"THY — PİLOT PROJE", sector:"Havacılık"},
+  {year:"2024", month:"Şubat", name:"GALTES TANKLAR", sector:""},
+  {year:"2024", month:"Ocak", name:"KERVAN GIDA", sector:"Gıda"},
+  {year:"2024", month:"Ocak", name:"ERSAŞPEN", sector:"PVC / Kalem"},
+  {year:"2024", month:"Ocak", name:"HÜDA MAKİNA", sector:""},
+  // 2023
+  {year:"2023", month:"Aralık", name:"OUS OTOMOTİV", sector:"Otomotiv"},
+  {year:"2023", month:"Aralık", name:"BİEM İLAÇ", sector:"İlaç"},
+  {year:"2023", month:"Aralık", name:"YÜREK POLİMER", sector:"Tekstil / Polimer"},
+  {year:"2023", month:"Aralık", name:"ERSOY MEDİKAL", sector:"Medikal / Diş"},
+  {year:"2023", month:"Aralık", name:"TENNECO", sector:"Otomotiv (Uluslararası)"},
+  {year:"2023", month:"Aralık", name:"ANADOLU İPLİK", sector:"Tekstil"},
+  {year:"2023", month:"Kasım", name:"DİFAŞ", sector:"Diş Fırçası"},
+  {year:"2023", month:"Kasım", name:"KORTEKS", sector:"Tekstil"},
+  {year:"2023", month:"Kasım", name:"AYDIN KURUYEMİŞ", sector:"Gıda"},
+  {year:"2023", month:"Kasım", name:"SAĞLAM METAL", sector:"Metal"},
+  {year:"2023", month:"Ekim", name:"ADOKSAN", sector:"Otomotiv / Döküm"},
+  {year:"2023", month:"Ekim", name:"KARDEŞLER KROMAJ", sector:"Kaplama"},
+  {year:"2023", month:"Ekim", name:"KIZTAŞI GIDA", sector:"Gıda"},
+  {year:"2023", month:"Eylül", name:"İÇDAŞ", sector:"Denizcilik / Çelik"},
+  {year:"2023", month:"Eylül", name:"ALTINSU TEKSTİL", sector:"Tekstil"},
+  {year:"2023", month:"Eylül", name:"IGM — CEZAYİR", sector:"İhracat / Cezayir"},
+  {year:"2023", month:"Eylül", name:"BİFA BİSKÜVİ", sector:"Gıda"},
+  {year:"2023", month:"Eylül", name:"MAY FREN", sector:"Otomotiv"},
+  {year:"2023", month:"Eylül", name:"CW ENERJİ", sector:"Enerji"},
+  {year:"2023", month:"Ağustos", name:"AKBAŞLAR TEKSTİL", sector:"Tekstil"},
+  {year:"2023", month:"Ağustos", name:"ÖZ ERMAN ARUSAN (EGE CONTA)", sector:"Otomotiv / Conta"},
+  {year:"2023", month:"Temmuz", name:"ADOKSAN (2)", sector:"Otomotiv / Döküm"},
+  {year:"2023", month:"Temmuz", name:"BİMTES", sector:""},
+  {year:"2023", month:"Temmuz", name:"ROZA TEKS", sector:"Tekstil"},
+  {year:"2023", month:"Temmuz", name:"LİDER MAKİNA", sector:""},
+  {year:"2023", month:"Temmuz", name:"TEKMİS", sector:""},
+  {year:"2023", month:"Haziran", name:"ALEYNA PEN", sector:"PVC / Kalem"},
+  {year:"2023", month:"Haziran", name:"ANL GIDA", sector:"Gıda"},
+  {year:"2023", month:"Haziran", name:"AYDIN TEKSTİL", sector:"Tekstil"},
+  {year:"2023", month:"Haziran", name:"FAMAGUSTA — KIBRIS", sector:"Denizcilik / Kıbrıs"},
+  {year:"2023", month:"Mayıs", name:"AYGUN CERRAHİ ALETLER", sector:"Medikal"},
+  {year:"2023", month:"Nisan", name:"TKS", sector:""},
+  {year:"2023", month:"Nisan", name:"TAREN TARIM", sector:"Tarım"},
+  {year:"2023", month:"Oca-Mar", name:"CENGİZ MAKİNA", sector:""},
+  {year:"2023", month:"Oca-Mar", name:"EREN KALIP — CEZAYİR", sector:"İhracat / Cezayir"},
+  {year:"2023", month:"Oca-Mar", name:"ŞİŞECAM", sector:"Cam / Sanayi"},
+  {year:"2023", month:"Oca-Mar", name:"AYKA BAKALİT", sector:"Plastik"},
+  {year:"2023", month:"Oca-Mar", name:"KARADENİZ ENERJİ", sector:"Enerji"},
+  {year:"2023", month:"Oca-Mar", name:"OZGEN SHİP", sector:"Denizcilik"},
+  {year:"2023", month:"Oca-Mar", name:"SHİPYARD CYPRUS", sector:"Denizcilik / Kıbrıs"},
+  {year:"2023", month:"Oca-Mar", name:"RETAY SİLAH", sector:"Savunma"},
+  // 2022 ve öncesi
+  {year:"2022 ve öncesi", month:"", name:"ARÇELİK", sector:"Beyaz Eşya"},
+  {year:"2022 ve öncesi", month:"", name:"ALTEK — NATO", sector:"Savunma / NATO"},
+  {year:"2022 ve öncesi", month:"", name:"EFİ OTOMOTİV — FRANSA", sector:"İhracat / Fransa"},
+  {year:"2022 ve öncesi", month:"", name:"BELKA KAUÇUK", sector:"Otomotiv / Kauçuk"},
+  {year:"2022 ve öncesi", month:"", name:"MISIR — EVYE YIKAMA", sector:"İhracat / Mısır"},
+  {year:"2022 ve öncesi", month:"", name:"MISIR — TENCERE YIKAMA", sector:"İhracat / Mısır"},
+  {year:"2022 ve öncesi", month:"", name:"FRİSSE OCEAAN — HOLLANDA", sector:"İhracat / Hollanda"},
+  {year:"2022 ve öncesi", month:"", name:"STANDART PROFİL", sector:"PVC"},
+  {year:"2022 ve öncesi", month:"", name:"TURASAŞ", sector:"Demiryolu"},
+  {year:"2022 ve öncesi", month:"", name:"IŞIKSOY TEKSTİL", sector:"Tekstil"},
+  {year:"2022 ve öncesi", month:"", name:"MOSB ENERJİ", sector:"Enerji"},
+  {year:"2022 ve öncesi", month:"", name:"ARENKA", sector:"Denizcilik"},
+  {year:"2022 ve öncesi", month:"", name:"ZAİKA MUTFAK", sector:"Mutfak"},
+  {year:"2022 ve öncesi", month:"", name:"LİMAK ENERJİ", sector:"Enerji"},
+  {year:"2022 ve öncesi", month:"", name:"BEYZA KUYUMCULUK", sector:"Kuyumculuk"},
+  {year:"2022 ve öncesi", month:"", name:"VOESTALPİNE", sector:"Çelik / Avusturya"},
+  {year:"2022 ve öncesi", month:"", name:"SİSFEN", sector:"Cam"},
+  {year:"2022 ve öncesi", month:"", name:"FİL FİLTRE", sector:"Otomotiv"},
+  {year:"2022 ve öncesi", month:"", name:"KALYON ENERJİ", sector:"Enerji"},
+  {year:"2022 ve öncesi", month:"", name:"HİZMET GRUP", sector:""},
+  {year:"2022 ve öncesi", month:"", name:"DEMSA — ISIL İŞLEM", sector:"Isıl İşlem"},
+  {year:"2022 ve öncesi", month:"", name:"TIPMED MEDİKAL", sector:"Medikal"},
+  {year:"2022 ve öncesi", month:"", name:"ARİFOĞLU GIDA", sector:"Gıda"},
+  {year:"2022 ve öncesi", month:"", name:"PİMTAŞ", sector:"Gıda"},
+  {year:"2022 ve öncesi", month:"", name:"ART SHİPYARD", sector:"Denizcilik"},
+  {year:"2022 ve öncesi", month:"", name:"YAĞMURPEN", sector:"PVC"},
+  {year:"2022 ve öncesi", month:"", name:"EVEREST PVC", sector:"PVC"},
+  {year:"2022 ve öncesi", month:"", name:"TÜBİTAK — GIDA PROJESİ 2022", sector:"Ar-Ge"},
+  {year:"2022 ve öncesi", month:"", name:"KORTEKS 2", sector:"Tekstil"},
+  {year:"2022 ve öncesi", month:"", name:"ART SHİPYARD", sector:"Denizcilik"},
+];
+
+const QUESTIONS = [
+  {key:"cv", label:"CV'YE EKLE?", type:"radio", hint:"Bu proje CV'nize girsin mi?"},
+  {key:"star", label:"GURUR PUANI", type:"stars", hint:"1 = Standart tasarım  |  5 = Buna gerçekten gurur duyuyorum"},
+  {key:"what", label:"NE YAPILDI?", type:"textarea", hint:"Kısa özet: Müşteri için ne tasarladınız? (1-2 cümle yeterli)", rows:2},
+  {key:"innovation", label:"YENİLİK / ÖZELLİK ⭐", type:"textarea", hint:"Standart bir Plussonic makinesi değil de, bu projede ne farklı yaptınız? Ne eklediniz, ne çözdünüz? Standartsa boş bırakın.", rows:3},
+  {key:"challenge", label:"TEKNİK ZORLUK", type:"textarea", hint:"En zorlu kısım neydi? Neden?", rows:2},
+  {key:"result", label:"SONUÇ / ETKİ", type:"textarea", hint:"Müşteri ne kazandı? Üretim nasıl değişti?", rows:2},
+  {key:"client_quote", label:"MÜŞTERİ GÖRÜŞÜ", type:"textarea", hint:"Müşteri ne dedi? Olumlu bir geri bildirim varsa yazın.", rows:2},
+  {key:"photos", label:"FOTOĞRAFLAR", type:"photos", hint:"Bilgisayarından seç veya Drive linki yapıştır"},
+  {key:"notes", label:"EK NOTLAR / HİKAYE", type:"textarea", hint:"Her türlü not: Süreç, sektördeki ilk olma durumu, hikaye...", rows:2},
+];
+
+function getData(key) {
+  try { return JSON.parse(localStorage.getItem('cvdata_' + key) || '{}'); } catch(e) { return {}; }
+}
+function setData(key, val) {
+  localStorage.setItem('cvdata_' + key, JSON.stringify(val));
+}
+function projectKey(i) { return 'p' + i; }
+
+function getStatusClass(data) {
+  if (!data.cv) return '';
+  if (data.cv === 'EVET') return 'done';
+  if (data.cv === 'HAYIR') return 'skip';
+  if (data.cv === 'BELKI') return 'maybe';
+  return '';
+}
+function getStatusLabel(data) {
+  if (!data.cv) return {cls:'status-empty', txt:'doldurulmadı'};
+  if (data.cv === 'EVET') return {cls:'status-yes', txt:"✓ CV'de"};
+  if (data.cv === 'HAYIR') return {cls:'status-no', txt:'— atlandı'};
+  if (data.cv === 'BELKI') return {cls:'status-maybe', txt:'? belki'};
+  return {cls:'status-empty', txt:''};
+}
+
+function buildStars(key, val) {
+  let html = '<div class="stars" id="stars_'+key+'">';
+  for (let i=1;i<=5;i++) {
+    html += '<span class="star'+(val>=i?' on':'') +'" onclick="setStar(\''+key+'\','+i+')">★</span>';
+  }
+  return html + '</div>';
+}
+
+function setStar(key, val) {
+  let data = getData(key);
+  data.star = val;
+  setData(key, data);
+  let starsEl = document.getElementById('stars_'+key);
+  if (starsEl) {
+    starsEl.querySelectorAll('.star').forEach((s,i) => {
+      s.classList.toggle('on', i < val);
+    });
+  }
+}
+
+function buildCard(proj, idx) {
+  const key = projectKey(idx);
+  const data = getData(key);
+  const sc = getStatusClass(data);
+  const sl = getStatusLabel(data);
+
+  let formHtml = '';
+  QUESTIONS.forEach(q => {
+    formHtml += '<div class="form-row">';
+    formHtml += '<label>' + q.label + (q.hint ? ' <span>— ' + q.hint + '</span>' : '') + '</label>';
+    if (q.type === 'radio') {
+      formHtml += '<div class="radio-row">';
+      ['EVET','HAYIR','BELKI'].forEach(opt => {
+        const checked = data.cv === opt ? 'checked' : '';
+        formHtml += '<span class="radio-opt"><input type="radio" name="cv_'+key+'" value="'+opt+'" id="cv_'+key+'_'+opt+'" '+checked+' onchange="saveRadio(\''+key+'\',this.value)"><label for="cv_'+key+'_'+opt+'">'+opt+'</label></span>';
+      });
+      formHtml += '</div>';
+    } else if (q.type === 'stars') {
+      formHtml += buildStars(key, data.star || 0);
+    } else if (q.type === 'textarea') {
+      const rows = q.rows || 2;
+      formHtml += '<textarea rows="'+rows+'" id="field_'+key+'_'+q.key+'" placeholder="'+q.hint+'">' + (data[q.key] || '') + '</textarea>';
+    } else if (q.type === 'photos') {
+      const storedPhotos = data.photos_files || [];
+      const storedLink = data.photos || '';
+      formHtml += '<div class="photo-section">';
+      formHtml += '<div class="photo-thumbs" id="thumbs_'+key+'">';
+      storedPhotos.forEach((p, pi) => {
+        formHtml += '<div class="thumb-wrap"><img src="'+p.data+'" class="thumb-img" title="'+p.name+'" onclick="openPhoto(\''+p.data+'\')"><button class="thumb-del" onclick="removePhoto(\''+key+'\','+pi+')">✕</button><div class="thumb-name">'+p.name.substring(0,14)+'</div></div>';
+      });
+      formHtml += '</div>';
+      formHtml += '<label class="photo-upload-btn"><input type="file" accept="image/*" multiple style="display:none" onchange="handlePhotoUpload(\''+key+'\', this.files)">+ FOTOĞRAF EKLE</label>';
+      formHtml += '<input type="text" class="photo-link-input" id="field_'+key+'_photos" placeholder="veya Google Drive / web linki yapıştırın" value="'+storedLink.replace(/"/g,'&quot;')+'">';
+      formHtml += '</div>';
+    } else {
+      formHtml += '<input type="text" id="field_'+key+'_'+q.key+'" placeholder="'+q.hint+'" value="'+(data[q.key] || '').replace(/"/g,'&quot;')+'">';
+    }
+    formHtml += '</div>';
+  });
+
+  return `
+    <div class="project-card ${sc}" id="card_${key}">
+      <div class="card-header" onclick="toggleCard('${key}')">
+        <span class="card-num">${String(idx+1).padStart(3,'0')}</span>
+        <span class="card-name">${proj.name}</span>
+        <span class="card-sector">${proj.sector}</span>
+        <span class="card-status ${sl.cls}">${sl.txt}</span>
+        <span class="card-chevron" id="chev_${key}">▼</span>
+      </div>
+      <div class="card-body" id="body_${key}">
+        ${formHtml}
+        <button class="save-btn" onclick="saveCard('${key}', ${idx})">KAYDET</button>
+        <span class="saved-msg" id="savedMsg_${key}">✓ kaydedildi</span>
+      </div>
+    </div>
+  `;
+}
+
+function toggleCard(key) {
+  const body = document.getElementById('body_'+key);
+  const chev = document.getElementById('chev_'+key);
+  body.classList.toggle('open');
+  chev.classList.toggle('open');
+}
+
+function saveRadio(key, val) {
+  let data = getData(key);
+  data.cv = val;
+  setData(key, data);
+  updateCardStatus(key);
+  updateStats();
+  scheduleDriveSave();
+}
+
+function saveCard(key, idx) {
+  let data = getData(key);
+  QUESTIONS.forEach(q => {
+    if (q.type !== 'radio' && q.type !== 'stars') {
+      const el = document.getElementById('field_'+key+'_'+q.key);
+      if (el) data[q.key] = el.value;
+    }
+  });
+  setData(key, data);
+  updateCardStatus(key);
+  updateStats();
+  scheduleDriveSave();
+  const msg = document.getElementById('savedMsg_'+key);
+  if (msg) { msg.style.display = 'inline'; setTimeout(() => msg.style.display='none', 2000); }
+}
+
+function updateCardStatus(key) {
+  const data = getData(key);
+  const card = document.getElementById('card_'+key);
+  const statusEl = card ? card.querySelector('.card-status') : null;
+  if (!card || !statusEl) return;
+  card.className = 'project-card ' + getStatusClass(data);
+  const sl = getStatusLabel(data);
+  statusEl.className = 'card-status ' + sl.cls;
+  statusEl.textContent = sl.txt;
+}
+
+function updateStats() {
+  let done=0, yes=0, no=0, maybe=0;
+  PROJECTS.forEach((_,i) => {
+    const data = getData(projectKey(i));
+    if (data.cv) done++;
+    if (data.cv === 'EVET') yes++;
+    if (data.cv === 'HAYIR') no++;
+    if (data.cv === 'BELKI') maybe++;
+  });
+  document.getElementById('totalCount').textContent = PROJECTS.length;
+  document.getElementById('doneCount').textContent = done;
+  document.getElementById('yesCount').textContent = yes;
+  document.getElementById('noCount').textContent = no;
+  document.getElementById('maybeCount').textContent = maybe;
+}
+
+function resizeImage(file, callback) {
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    const img = new Image();
+    img.onload = function() {
+      const canvas = document.createElement('canvas');
+      const MAX = 900;
+      let w = img.width, h = img.height;
+      if (w > MAX || h > MAX) {
+        if (w > h) { h = Math.round(h * MAX / w); w = MAX; }
+        else { w = Math.round(w * MAX / h); h = MAX; }
+      }
+      canvas.width = w; canvas.height = h;
+      canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+      callback(canvas.toDataURL('image/jpeg', 0.78));
+    };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+
+function handlePhotoUpload(key, files) {
+  const data = getData(key);
+  const photos = data.photos_files || [];
+  let pending = files.length;
+  Array.from(files).forEach(file => {
+    resizeImage(file, function(dataUrl) {
+      photos.push({name: file.name, data: dataUrl});
+      pending--;
+      if (pending === 0) {
+        data.photos_files = photos;
+        try { setData(key, data); } catch(e) { alert('Fotoğraf depolama hatası: localStorage dolu olabilir. Daha az fotoğraf deneyin.'); return; }
+        renderThumbs(key, photos);
+      }
+    });
+  });
+}
+
+function removePhoto(key, idx) {
+  const data = getData(key);
+  const photos = data.photos_files || [];
+  photos.splice(idx, 1);
+  data.photos_files = photos;
+  setData(key, data);
+  renderThumbs(key, photos);
+}
+
+function renderThumbs(key, photos) {
+  const container = document.getElementById('thumbs_'+key);
+  if (!container) return;
+  container.innerHTML = photos.map((p, pi) =>
+    '<div class="thumb-wrap"><img src="'+p.data+'" class="thumb-img" title="'+p.name+'" onclick="openPhoto(\''+p.data+'\')"><button class="thumb-del" onclick="removePhoto(\''+key+'\','+pi+')">✕</button><div class="thumb-name">'+p.name.substring(0,14)+'</div></div>'
+  ).join('');
+}
+
+function openPhoto(src) {
+  const w = window.open();
+  w.document.write('<img src="'+src+'" style="max-width:100%;height:auto;">');
+}
+
+function buildList() {
+  let html = '';
+  let currentYear = '', currentMonth = '';
+  PROJECTS.forEach((proj, idx) => {
+    if (proj.year !== currentYear) {
+      if (currentYear) html += '</div>';
+      html += `<div class="year-section"><div class="year-title">${proj.year}</div>`;
+      currentYear = proj.year;
+      currentMonth = '';
+    }
+    if (proj.month && proj.month !== currentMonth) {
+      html += `<div class="month-label">${proj.month}</div>`;
+      currentMonth = proj.month;
+    }
+    html += buildCard(proj, idx);
+  });
+  html += '</div>';
+  document.getElementById('projectList').innerHTML = html;
+  updateStats();
+}
+
+function openExport() {
+  let out = '=== UFUK KANTARCI — CV PROJE İÇERİK HAVUZU ===\n';
+  out += 'Tarih: ' + new Date().toLocaleDateString('tr-TR') + '\n\n';
+
+  let yesProjects = [];
+  let maybeProjects = [];
+
+  PROJECTS.forEach((proj, idx) => {
+    const data = getData(projectKey(idx));
+    if (data.cv === 'EVET' || data.cv === 'BELKI') {
+      const entry = {proj, data, idx};
+      if (data.cv === 'EVET') yesProjects.push(entry);
+      else maybeProjects.push(entry);
+    }
+  });
+
+  out += `CV'YE EKLENECEK PROJELER (${yesProjects.length} proje)\n`;
+  out += '═'.repeat(50) + '\n\n';
+
+  yesProjects.forEach(({proj, data, idx}) => {
+    out += `[${String(idx+1).padStart(3,'0')}] ${proj.name}\n`;
+    out += `Sektör: ${proj.sector || '—'} | Tarih: ${proj.year} ${proj.month || ''}\n`;
+    out += `Gurur Puanı: ${'★'.repeat(data.star||0)}${'☆'.repeat(5-(data.star||0))} (${data.star||'?'}/5)\n`;
+    if (data.what) out += `Ne yapıldı: ${data.what}\n`;
+    if (data.innovation) out += `Yenilik/Özellik: ${data.innovation}\n`;
+    if (data.challenge) out += `Teknik zorluk: ${data.challenge}\n`;
+    if (data.result) out += `Sonuç/Etki: ${data.result}\n`;
+    if (data.client_quote) out += `Müşteri görüşü: ${data.client_quote}\n`;
+    if (data.photos) out += `Drive linki: ${data.photos}\n`;
+    if (data.photos_files && data.photos_files.length > 0) out += `Fotoğraf dosyaları (${data.photos_files.length}): ${data.photos_files.map(p=>p.name).join(', ')}\n`;
+    if (data.notes) out += `Notlar: ${data.notes}\n`;
+    out += '\n';
+  });
+
+  if (maybeProjects.length > 0) {
+    out += `\nBELKİ EKLENECEKLER (${maybeProjects.length} proje)\n`;
+    out += '─'.repeat(40) + '\n\n';
+    maybeProjects.forEach(({proj, data, idx}) => {
+      out += `[${String(idx+1).padStart(3,'0')}] ${proj.name} | ${proj.year} ${proj.month||''}\n`;
+      if (data.what) out += `Ne yapıldı: ${data.what}\n`;
+      if (data.innovation) out += `Yenilik: ${data.innovation}\n`;
+      out += '\n';
+    });
+  }
+
+  const allFilled = PROJECTS.filter((_,i) => getData(projectKey(i)).cv).length;
+  out += `\n--- İstatistikler: ${allFilled}/${PROJECTS.length} proje değerlendirildi ---`;
+
+  document.getElementById('exportText').value = out;
+  document.getElementById('exportModal').classList.add('show');
+}
+
+function closeExport() {
+  document.getElementById('exportModal').classList.remove('show');
+}
+
+function copyExport() {
+  const ta = document.getElementById('exportText');
+  ta.select();
+  document.execCommand('copy');
+  document.getElementById('copyMsg').textContent = '✓ Kopyalandı! Claude\'a yapıştırın.';
+  setTimeout(() => document.getElementById('copyMsg').textContent = '', 3000);
+}
+
+buildList();
+</script>
+</body>
+</html>
