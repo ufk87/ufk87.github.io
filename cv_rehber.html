@@ -529,6 +529,9 @@ const QUESTIONS = [
   {key:"challenge", label:"TEKNİK ZORLUK", type:"textarea", hint:"En zorlu kısım neydi? Neden?", rows:2},
   {key:"result", label:"SONUÇ / ETKİ", type:"textarea", hint:"Müşteri ne kazandı? Üretim nasıl değişti?", rows:2},
   {key:"client_quote", label:"MÜŞTERİ GÖRÜŞÜ", type:"textarea", hint:"Müşteri ne dedi? Olumlu bir geri bildirim varsa yazın.", rows:2},
+  {key:"ref_name", label:"REFERANS — AD SOYAD", type:"text", hint:"Örn: Serkan Çetinkaya"},
+  {key:"ref_title", label:"REFERANS — UNVAN", type:"text", hint:"Örn: Üretim Müdürü"},
+  {key:"ref_contact", label:"REFERANS — İLETİŞİM", type:"text", hint:"Telefon ve/veya e-posta"},
   {key:"photos", label:"FOTOĞRAFLAR", type:"photos", hint:"Bilgisayarından seç veya Drive linki yapıştır"},
   {key:"notes", label:"EK NOTLAR / HİKAYE", type:"textarea", hint:"Her türlü not: Süreç, sektördeki ilk olma durumu, hikaye...", rows:2},
 ];
@@ -804,6 +807,9 @@ function openExport() {
     if (data.client_quote) out += `Müşteri görüşü: ${data.client_quote}\n`;
     if (data.photos) out += `Drive linki: ${data.photos}\n`;
     if (data.photos_files && data.photos_files.length > 0) out += `Fotoğraf dosyaları (${data.photos_files.length}): ${data.photos_files.map(p=>p.name).join(', ')}\n`;
+    if (data.ref_name || data.ref_title || data.ref_contact) {
+      out += `Referans: ${[data.ref_name, data.ref_title, data.ref_contact].filter(Boolean).join(' | ')}\n`;
+    }
     if (data.notes) out += `Notlar: ${data.notes}\n`;
     out += '\n';
   });
