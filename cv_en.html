@@ -5,335 +5,386 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Ufuk Kantarci — CV</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@300;400;500;600&family=Barlow+Condensed:wght@400;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Barlow+Condensed:wght@600;700;800&display=swap" rel="stylesheet">
 <style>
-:root {
-  --accent: #4a7fa5;
-  --dark: #1c1c1e;
-  --text: #1a1a1a;
-  --text-mid: #444;
-  --text-dim: #777;
-  --border: #d8d4cf;
-  --bg: #f0eeeb;
-  --sans: "Barlow", sans-serif;
-  --cond: "Barlow Condensed", sans-serif;
-  --mono: "IBM Plex Mono", monospace;
-}
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
+:root {
+  --accent: #4a7fa5;
+  --accent-light: #e8f1f7;
+  --text: #1a1a1a;
+  --text-mid: #4a4a4a;
+  --text-dim: #888;
+  --border: #e0dbd5;
+  --sidebar-bg: #f4f2ef;
+  --sans: "Barlow", sans-serif;
+  --cond: "Barlow Condensed", sans-serif;
+}
+
 body {
-  background: var(--bg);
-  color: var(--text);
+  background: #e8e5e0;
   font-family: var(--sans);
-  font-size: 13.5px;
-  line-height: 1.6;
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--text);
   -webkit-font-smoothing: antialiased;
-  padding: 2rem 1.5rem 4rem;
+  padding: 2.5rem 1.5rem 5rem;
 }
 
 .page {
-  max-width: 820px;
+  max-width: 860px;
   margin: 0 auto;
   background: #fff;
-  box-shadow: 0 4px 24px rgba(0,0,0,0.08);
-  border-radius: 4px;
+  box-shadow: 0 8px 40px rgba(0,0,0,0.12);
 }
 
-/* TOP BAR */
-.topbar {
-  background: var(--dark);
-  padding: 2.8rem 3rem 2.2rem;
-  border-radius: 4px 4px 0 0;
+/* ── HEADER ─────────────────────────────── */
+.header {
+  padding: 3rem 3rem 2.5rem;
+  border-bottom: 1px solid var(--border);
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
   gap: 2rem;
 }
-.tb-left h1 {
+
+.h-name {
   font-family: var(--cond);
-  font-size: 2.8rem;
+  font-size: 3.2rem;
   font-weight: 800;
-  color: #fff;
-  letter-spacing: 0.03em;
-  line-height: 1;
-  margin-bottom: 0.4rem;
+  color: var(--text);
+  letter-spacing: 0.01em;
+  line-height: 0.95;
+  margin-bottom: 0.5rem;
 }
-.tb-left .title {
-  font-family: var(--mono);
-  font-size: 0.65rem;
-  color: rgba(255,255,255,0.45);
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-}
-.tb-right {
-  text-align: right;
-  font-family: var(--mono);
-  font-size: 0.63rem;
-  color: rgba(255,255,255,0.5);
-  line-height: 2;
-  white-space: nowrap;
-}
-.tb-right a { color: rgba(255,255,255,0.6); text-decoration: none; }
-.tb-right a:hover { color: var(--accent); }
 
-/* BODY */
-.body { display: grid; grid-template-columns: 1fr 210px; gap: 0; }
-
-/* MAIN COLUMN */
-.main { padding: 2.5rem 2.8rem; border-right: 1px solid var(--border); }
-
-/* SIDEBAR COLUMN */
-.aside { padding: 2.5rem 1.8rem; }
-
-/* SECTION */
-.sec { margin-bottom: 2.2rem; }
-.sec-label {
-  font-family: var(--mono);
-  font-size: 0.6rem;
-  letter-spacing: 0.2em;
+.h-name span {
+  display: block;
+  font-weight: 300;
   color: var(--accent);
-  text-transform: uppercase;
-  margin-bottom: 0.7rem;
-  padding-bottom: 0.4rem;
-  border-bottom: 1px solid var(--border);
+  font-size: 2rem;
+  letter-spacing: 0.02em;
+  line-height: 1.1;
 }
 
-/* SUMMARY */
-.summary {
-  font-size: 0.88rem;
-  color: var(--text-mid);
-  line-height: 1.75;
+.h-title {
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin-top: 0.6rem;
 }
+
+.h-contact {
+  text-align: right;
+  font-size: 0.82rem;
+  color: var(--text-mid);
+  line-height: 1.9;
+}
+
+.h-contact a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.h-contact a:hover { text-decoration: underline; }
+
+/* ── BODY GRID ───────────────────────────── */
+.body {
+  display: grid;
+  grid-template-columns: 248px 1fr;
+}
+
+/* ── SIDEBAR ─────────────────────────────── */
+.aside {
+  background: var(--sidebar-bg);
+  padding: 2.4rem 2rem;
+  border-right: 1px solid var(--border);
+}
+
+/* ── MAIN ────────────────────────────────── */
+.main {
+  padding: 2.4rem 2.8rem;
+}
+
+/* ── SECTION ─────────────────────────────── */
+.sec { margin-bottom: 2.4rem; }
+.sec:last-child { margin-bottom: 0; }
+
+.aside-sec { margin-bottom: 2rem; }
+.aside-sec:last-child { margin-bottom: 0; }
+
+.sec-title {
+  font-family: var(--cond);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.sec-title::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+/* ── SUMMARY ─────────────────────────────── */
+.summary {
+  font-size: 0.9rem;
+  color: var(--text-mid);
+  line-height: 1.8;
+}
+
 .summary strong { color: var(--text); font-weight: 600; }
 
-/* JOB */
-.job { margin-bottom: 1.6rem; }
-.job:last-child { margin-bottom: 0; }
-.job-header { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; margin-bottom: 0.15rem; }
+/* ── JOB ─────────────────────────────────── */
+.job { margin-bottom: 1.8rem; padding-bottom: 1.8rem; border-bottom: 1px solid var(--border); }
+.job:last-child { margin-bottom: 0; padding-bottom: 0; border-bottom: none; }
+
+.job-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 0.15rem;
+}
+
 .job-company {
   font-family: var(--cond);
-  font-size: 1.05rem;
+  font-size: 1.1rem;
   font-weight: 700;
   color: var(--text);
-  letter-spacing: 0.02em;
+  letter-spacing: 0.01em;
 }
+
 .job-dates {
-  font-family: var(--mono);
-  font-size: 0.58rem;
+  font-size: 0.75rem;
   color: var(--text-dim);
+  font-weight: 400;
   white-space: nowrap;
   flex-shrink: 0;
 }
+
 .job-role {
-  font-size: 0.78rem;
+  font-size: 0.82rem;
   color: var(--accent);
   font-weight: 500;
-  margin-bottom: 0.5rem;
-  letter-spacing: 0.04em;
+  font-style: italic;
+  margin-bottom: 0.6rem;
 }
+
 .job-desc {
+  font-size: 0.84rem;
+  color: var(--text-mid);
+  line-height: 1.65;
+}
+
+.job-desc ul {
+  padding-left: 1.1rem;
+  margin-top: 0.2rem;
+}
+
+.job-desc li {
+  margin-bottom: 0.25rem;
+}
+
+/* ── PROJECT ─────────────────────────────── */
+.project { margin-bottom: 1.4rem; padding-bottom: 1.4rem; border-bottom: 1px solid var(--border); }
+.project:last-child { margin-bottom: 0; padding-bottom: 0; border-bottom: none; }
+
+.project-head {
+  display: flex;
+  align-items: baseline;
+  gap: 0.8rem;
+  margin-bottom: 0.2rem;
+  flex-wrap: wrap;
+}
+
+.project-name {
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: var(--text);
+}
+
+.project-client {
+  font-size: 0.75rem;
+  color: var(--accent);
+  font-weight: 400;
+}
+
+.project-desc {
   font-size: 0.83rem;
   color: var(--text-mid);
   line-height: 1.65;
 }
-.job-desc ul { padding-left: 1rem; margin-top: 0.3rem; }
-.job-desc li { margin-bottom: 0.2rem; }
 
-/* PROJECT HIGHLIGHT */
-.project-card {
-  background: #f8f7f5;
-  border-left: 3px solid var(--accent);
-  padding: 0.9rem 1rem;
-  border-radius: 0 3px 3px 0;
-  margin-bottom: 0.8rem;
-}
-.project-card:last-child { margin-bottom: 0; }
-.project-name {
-  font-family: var(--cond);
-  font-size: 0.95rem;
-  font-weight: 700;
-  color: var(--text);
-  margin-bottom: 0.15rem;
-}
-.project-client {
-  font-family: var(--mono);
-  font-size: 0.56rem;
-  color: var(--accent);
-  letter-spacing: 0.12em;
-  margin-bottom: 0.35rem;
-}
-.project-desc {
-  font-size: 0.79rem;
-  color: var(--text-mid);
-  line-height: 1.6;
-}
-
-/* ASIDE SECTIONS */
-.aside-sec { margin-bottom: 2rem; }
-.aside-sec .sec-label { margin-bottom: 0.6rem; }
-
-/* SKILLS */
-.skill-group { margin-bottom: 0.9rem; }
-.skill-group-name {
-  font-size: 0.68rem;
-  font-weight: 600;
-  color: var(--text);
-  margin-bottom: 0.3rem;
-  letter-spacing: 0.03em;
-}
-.skill-tags { display: flex; flex-wrap: wrap; gap: 4px; }
-.skill-tag {
-  font-family: var(--mono);
-  font-size: 0.56rem;
-  background: #f0eeeb;
-  color: var(--text-mid);
-  padding: 2px 7px;
-  border-radius: 2px;
-  border: 1px solid var(--border);
-}
-
-/* LANGUAGES */
-.lang-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0.35rem 0;
-  border-bottom: 1px solid var(--border);
-  font-size: 0.8rem;
-}
-.lang-row:last-child { border-bottom: none; }
-.lang-name { font-weight: 500; }
-.lang-level {
-  font-family: var(--mono);
-  font-size: 0.58rem;
-  color: var(--text-dim);
-}
-
-/* CLIENTS */
-.client-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 5px;
-}
-.client-tag {
-  font-family: var(--mono);
-  font-size: 0.55rem;
-  background: var(--dark);
-  color: rgba(255,255,255,0.7);
-  padding: 3px 7px;
-  border-radius: 2px;
-}
-
-/* EDUCATION */
-.edu-item { margin-bottom: 0.8rem; }
+/* ── EDUCATION ───────────────────────────── */
 .edu-school {
   font-family: var(--cond);
-  font-size: 0.95rem;
+  font-size: 1rem;
   font-weight: 700;
   color: var(--text);
-}
-.edu-degree {
-  font-size: 0.78rem;
-  color: var(--text-mid);
-}
-.edu-year {
-  font-family: var(--mono);
-  font-size: 0.58rem;
-  color: var(--text-dim);
+  margin-bottom: 0.1rem;
 }
 
-/* CERTS */
-.cert-item {
-  font-size: 0.78rem;
+.edu-degree {
+  font-size: 0.83rem;
   color: var(--text-mid);
+}
+
+.edu-year {
+  font-size: 0.75rem;
+  color: var(--text-dim);
+  margin-top: 0.1rem;
+}
+
+/* ── SKILLS ──────────────────────────────── */
+.skill-group { margin-bottom: 1rem; }
+.skill-group:last-child { margin-bottom: 0; }
+
+.skill-cat {
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-dim);
+  margin-bottom: 0.3rem;
+}
+
+.skill-list {
+  font-size: 0.83rem;
+  color: var(--text-mid);
+  line-height: 1.7;
+}
+
+/* ── LANGUAGES ───────────────────────────── */
+.lang-item {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.84rem;
   padding: 0.3rem 0;
   border-bottom: 1px solid var(--border);
-  line-height: 1.4;
+  color: var(--text-mid);
+}
+.lang-item:last-child { border-bottom: none; }
+.lang-item strong { color: var(--text); font-weight: 500; }
+.lang-level { color: var(--text-dim); font-size: 0.78rem; }
+
+/* ── CLIENTS ─────────────────────────────── */
+.client-list {
+  font-size: 0.83rem;
+  color: var(--text-mid);
+  line-height: 1.9;
+}
+
+.client-list span {
+  display: inline-block;
+  margin-right: 0.2rem;
+}
+
+.client-list span::after {
+  content: ' ·';
+  color: var(--border);
+}
+
+.client-list span:last-child::after {
+  content: '';
+}
+
+/* ── CERTS ───────────────────────────────── */
+.cert-item {
+  font-size: 0.83rem;
+  color: var(--text-mid);
+  padding: 0.35rem 0;
+  border-bottom: 1px solid var(--border);
+  line-height: 1.45;
 }
 .cert-item:last-child { border-bottom: none; }
+.cert-sub { font-size: 0.74rem; color: var(--text-dim); }
 
-/* PERSONAL */
-.personal-row {
-  display: flex;
-  gap: 0.5rem;
-  font-size: 0.78rem;
-  color: var(--text-mid);
-  padding: 0.25rem 0;
+/* ── PERSONAL ────────────────────────────── */
+.personal-grid {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.2rem 0.8rem;
+  font-size: 0.83rem;
 }
-.personal-key {
-  font-family: var(--mono);
-  font-size: 0.58rem;
-  color: var(--text-dim);
-  flex: 0 0 80px;
-  padding-top: 2px;
-}
+.p-key { color: var(--text-dim); font-size: 0.76rem; padding-top: 2px; }
+.p-val { color: var(--text-mid); }
 
-/* PRINT BUTTON */
-.print-bar {
-  text-align: center;
-  padding: 1.5rem;
-  background: #f8f7f5;
-  border-radius: 0 0 4px 4px;
+/* ── FOOTER ──────────────────────────────── */
+.footer {
   border-top: 1px solid var(--border);
+  padding: 1.4rem 3rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--sidebar-bg);
 }
-.btn-print {
+
+.btn-pdf {
   font-family: var(--cond);
   font-size: 0.78rem;
   font-weight: 700;
   letter-spacing: 0.1em;
-  background: var(--dark);
+  text-transform: uppercase;
+  background: var(--text);
   color: #fff;
   border: none;
-  padding: 0.65rem 2rem;
-  border-radius: 3px;
+  padding: 0.6rem 1.8rem;
   cursor: pointer;
   text-decoration: none;
   display: inline-block;
-  margin-right: 0.5rem;
+  transition: background 0.15s;
 }
-.btn-print:hover { background: #333; }
-.btn-lang {
+.btn-pdf:hover { background: #333; }
+
+.btn-tr {
   font-family: var(--cond);
   font-size: 0.78rem;
   font-weight: 700;
   letter-spacing: 0.1em;
-  background: transparent;
+  text-transform: uppercase;
   color: var(--accent);
-  border: 1px solid var(--accent);
-  padding: 0.65rem 2rem;
-  border-radius: 3px;
-  cursor: pointer;
+  border: 1.5px solid var(--accent);
+  padding: 0.6rem 1.8rem;
   text-decoration: none;
   display: inline-block;
+  transition: all 0.15s;
 }
-.btn-lang:hover { background: var(--accent); color: #fff; }
+.btn-tr:hover { background: var(--accent); color: #fff; }
 
-/* PRINT STYLES */
+/* ── PRINT ───────────────────────────────── */
 @media print {
-  body { background: #fff; padding: 0; }
-  .page { box-shadow: none; border-radius: 0; }
-  .print-bar { display: none; }
-  .topbar { border-radius: 0; }
-  .body { page-break-inside: avoid; }
-  .job { page-break-inside: avoid; }
-  .project-card { page-break-inside: avoid; }
+  body { background: #fff; padding: 0; font-size: 12px; }
+  .page { box-shadow: none; max-width: none; }
+  .footer { display: none; }
+  .job, .project { page-break-inside: avoid; }
 }
 </style>
 </head>
 <body>
-
 <div class="page">
 
   <!-- HEADER -->
-  <div class="topbar">
-    <div class="tb-left">
-      <h1>Ufuk Kantarci</h1>
-      <div class="title">Mechanical Engineer &amp; Industrial Designer</div>
+  <div class="header">
+    <div>
+      <div class="h-name">
+        Ufuk
+        <span>Kantarci</span>
+      </div>
+      <div class="h-title">Mechanical Engineer &amp; Industrial Designer</div>
     </div>
-    <div class="tb-right">
+    <div class="h-contact">
       <a href="mailto:ufukkantarci@gmail.com">ufukkantarci@gmail.com</a><br>
       <a href="https://ufk87.github.io" target="_blank">ufk87.github.io</a><br>
-      <a href="https://linkedin.com/in/ufukkantarci" target="_blank">linkedin.com/in/ufukkantarci</a><br>
+      <a href="https://linkedin.com/in/ufukkantarci" target="_blank">LinkedIn</a><br>
       Istanbul, Turkey
     </div>
   </div>
@@ -341,27 +392,111 @@ body {
   <!-- BODY -->
   <div class="body">
 
-    <!-- MAIN COLUMN -->
-    <div class="main">
+    <!-- SIDEBAR -->
+    <div class="aside">
 
-      <!-- SUMMARY -->
-      <div class="sec">
-        <div class="sec-label">Summary</div>
-        <div class="summary">
-          Mechanical engineer and industrial designer with <strong>10+ years of experience</strong> delivering
-          custom industrial machinery from concept to turnkey installation. Co-founder of
-          <strong>Plassonik Metal Sanayi</strong>, specializing in ultrasonic and industrial washing systems.
-          Delivered <strong>130+ projects</strong> to leading Turkish manufacturers including Turkish Airlines,
-          Baykar, Aselsan, and Arçelik group companies.
+      <div class="aside-sec">
+        <div class="sec-title">Education</div>
+        <div class="edu-school">Yeditepe University</div>
+        <div class="edu-degree">Mechanical Engineering, B.Sc.</div>
+        <div class="edu-year">2005 – 2010 &nbsp;·&nbsp; Istanbul</div>
+      </div>
+
+      <div class="aside-sec">
+        <div class="sec-title">Technical Skills</div>
+
+        <div class="skill-group">
+          <div class="skill-cat">Design &amp; CAD</div>
+          <div class="skill-list">SolidWorks, AutoCAD,<br>SolidCAM, HSMWorks</div>
+        </div>
+
+        <div class="skill-group">
+          <div class="skill-cat">Programming</div>
+          <div class="skill-list">Python, Playwright,<br>VBA, Pine Script, HTML/CSS</div>
+        </div>
+
+        <div class="skill-group">
+          <div class="skill-cat">Manufacturing</div>
+          <div class="skill-list">CNC Machining, Sheet Metal,<br>Welding, PLC Automation</div>
+        </div>
+
+        <div class="skill-group">
+          <div class="skill-cat">Other</div>
+          <div class="skill-list">Anthropic API, GitHub,<br>Google Workspace API</div>
         </div>
       </div>
 
-      <!-- EXPERIENCE -->
+      <div class="aside-sec">
+        <div class="sec-title">Languages</div>
+        <div class="lang-item"><strong>Turkish</strong><span class="lang-level">Native</span></div>
+        <div class="lang-item"><strong>English</strong><span class="lang-level">Advanced</span></div>
+        <div class="lang-item"><strong>German</strong><span class="lang-level">Beginner</span></div>
+      </div>
+
+      <div class="aside-sec">
+        <div class="sec-title">Key Clients</div>
+        <div class="client-list">
+          <span>THY</span>
+          <span>Baykar</span>
+          <span>Aselsan</span>
+          <span>Adöksan</span>
+          <span>Gratis</span>
+          <span>Ukinox</span>
+          <span>AST</span>
+          <span>AKO</span>
+          <span>Tatbak</span>
+          <span>Alterna</span>
+          <span>Krom Evye</span>
+          <span>Divan</span>
+        </div>
+      </div>
+
+      <div class="aside-sec">
+        <div class="sec-title">Certifications</div>
+        <div class="cert-item">
+          Digital Marketing Fundamentals
+          <div class="cert-sub">Google / Udemy</div>
+        </div>
+        <div class="cert-item">
+          German Language Training
+          <div class="cert-sub">Goethe Institut</div>
+        </div>
+        <div class="cert-item">
+          International Leadership Program
+          <div class="cert-sub">Lions Club — Denmark</div>
+        </div>
+      </div>
+
+      <div class="aside-sec">
+        <div class="sec-title">Personal</div>
+        <div class="personal-grid">
+          <span class="p-key">Born</span><span class="p-val">1987</span>
+          <span class="p-key">Driving</span><span class="p-val">Class B</span>
+          <span class="p-key">Military</span><span class="p-val">Completed</span>
+        </div>
+      </div>
+
+    </div><!-- /aside -->
+
+    <!-- MAIN -->
+    <div class="main">
+
       <div class="sec">
-        <div class="sec-label">Work Experience</div>
+        <div class="sec-title">Summary</div>
+        <div class="summary">
+          Mechanical engineer and industrial designer with <strong>10+ years of experience</strong>
+          delivering custom industrial machinery from concept to turnkey installation.
+          Co-founder of <strong>Plassonik Metal Sanayi</strong>, specializing in ultrasonic and
+          industrial washing systems. Delivered <strong>130+ projects</strong> to leading Turkish
+          manufacturers including Turkish Airlines, Baykar, Aselsan, and Arçelik group companies.
+        </div>
+      </div>
+
+      <div class="sec">
+        <div class="sec-title">Work Experience</div>
 
         <div class="job">
-          <div class="job-header">
+          <div class="job-top">
             <div class="job-company">Plassonik Metal San. A.Ş.</div>
             <div class="job-dates">Dec 2015 – Present</div>
           </div>
@@ -372,13 +507,13 @@ body {
               <li>Turnkey installation for THY, Baykar, Aselsan, Adöksan, Gratis, Ukinox, and 20+ industrial clients.</li>
               <li>Mechanical design in SolidWorks; sheet metal, welded structures, and process engineering.</li>
               <li>Built Python/Playwright lead generation pipeline with Anthropic API for automated outreach.</li>
-              <li>Developed VBA macros to automate SolidWorks DXF export — reduced production file prep time significantly.</li>
+              <li>Developed VBA macros to automate SolidWorks DXF export — significantly reduced production file prep time.</li>
             </ul>
           </div>
         </div>
 
         <div class="job">
-          <div class="job-header">
+          <div class="job-top">
             <div class="job-company">ZwickRoell GmbH</div>
             <div class="job-dates">Apr 2015 – Nov 2015</div>
           </div>
@@ -389,7 +524,7 @@ body {
         </div>
 
         <div class="job">
-          <div class="job-header">
+          <div class="job-top">
             <div class="job-company">AO Smith</div>
             <div class="job-dates">Nov 2014 – Apr 2015</div>
           </div>
@@ -400,18 +535,18 @@ body {
         </div>
 
         <div class="job">
-          <div class="job-header">
+          <div class="job-top">
             <div class="job-company">Altay Grup</div>
             <div class="job-dates">Aug 2013 – Jul 2014</div>
           </div>
           <div class="job-role">Industrial Design Engineer</div>
           <div class="job-desc">
-            Industrial product design and development; 3D modelling in SolidWorks and preparation of manufacturing documentation.
+            Industrial product design and development; 3D modelling in SolidWorks and manufacturing documentation.
           </div>
         </div>
 
         <div class="job">
-          <div class="job-header">
+          <div class="job-top">
             <div class="job-company">Öztiryakiler</div>
             <div class="job-dates">Jan 2013 – Jul 2013</div>
           </div>
@@ -422,7 +557,7 @@ body {
         </div>
 
         <div class="job">
-          <div class="job-header">
+          <div class="job-top">
             <div class="job-company">YCEO Engineering</div>
             <div class="job-dates">Apr 2012 – Dec 2012</div>
           </div>
@@ -433,9 +568,9 @@ body {
         </div>
 
         <div class="job">
-          <div class="job-header">
+          <div class="job-top">
             <div class="job-company">Siemens</div>
-            <div class="job-dates">2008 (Internship)</div>
+            <div class="job-dates">2008 &nbsp;·&nbsp; Internship</div>
           </div>
           <div class="job-role">Engineering Intern</div>
           <div class="job-desc">
@@ -444,40 +579,47 @@ body {
         </div>
       </div>
 
-      <!-- FEATURED PROJECTS -->
       <div class="sec">
-        <div class="sec-label">Featured Projects</div>
+        <div class="sec-title">Featured Projects</div>
 
-        <div class="project-card">
-          <div class="project-name">Automated Wheel &amp; Pulley Washing Line</div>
-          <div class="project-client">AKO / Automotive Manufacturing</div>
+        <div class="project">
+          <div class="project-head">
+            <div class="project-name">Automated Wheel &amp; Pulley Washing Line</div>
+            <div class="project-client">AKO · Automotive</div>
+          </div>
           <div class="project-desc">
             PLC-controlled, multi-stage ultrasonic washing and rinsing line for pre-painting surface preparation
             in automotive production. Full turnkey design and installation.
           </div>
         </div>
 
-        <div class="project-card">
-          <div class="project-name">Aviation Parts Ultrasonic Washing System</div>
-          <div class="project-client">Turkish Airlines / Aviation MRO</div>
+        <div class="project">
+          <div class="project-head">
+            <div class="project-name">Aviation Parts Ultrasonic Washing System</div>
+            <div class="project-client">Turkish Airlines · MRO</div>
+          </div>
           <div class="project-desc">
             Custom stainless-steel ultrasonic washing system for THY Teknik, meeting aviation certification
-            standards for precision component cleaning in MRO operations.
+            standards for precision component cleaning.
           </div>
         </div>
 
-        <div class="project-card">
-          <div class="project-name">Industrial Kitchen Equipment Washing System</div>
-          <div class="project-client">Divan Group / Hospitality</div>
+        <div class="project">
+          <div class="project-head">
+            <div class="project-name">Industrial Kitchen Equipment Washing System</div>
+            <div class="project-client">Divan Group · Hospitality</div>
+          </div>
           <div class="project-desc">
             High-capacity stainless-steel industrial washing unit for Divan hotel kitchens,
             designed for continuous operation in demanding hospitality environments.
           </div>
         </div>
 
-        <div class="project-card">
-          <div class="project-name">Multi-Stage Surface Cleaning Line</div>
-          <div class="project-client">Adöksan / Casting &amp; Manufacturing</div>
+        <div class="project">
+          <div class="project-head">
+            <div class="project-name">Multi-Stage Surface Cleaning Line</div>
+            <div class="project-client">Adöksan · Casting &amp; Manufacturing</div>
+          </div>
           <div class="project-desc">
             Multi-stage washing and drying line for cast components, designed for high throughput
             and minimal waste in a foundry production environment.
@@ -486,136 +628,14 @@ body {
       </div>
 
     </div><!-- /main -->
-
-    <!-- ASIDE COLUMN -->
-    <div class="aside">
-
-      <!-- EDUCATION -->
-      <div class="aside-sec">
-        <div class="sec-label">Education</div>
-        <div class="edu-item">
-          <div class="edu-school">Yeditepe University</div>
-          <div class="edu-degree">Mechanical Engineering, B.Sc.</div>
-          <div class="edu-year">2005 – 2010 · Istanbul</div>
-        </div>
-      </div>
-
-      <!-- SKILLS -->
-      <div class="aside-sec">
-        <div class="sec-label">Technical Skills</div>
-
-        <div class="skill-group">
-          <div class="skill-group-name">Design &amp; CAD</div>
-          <div class="skill-tags">
-            <span class="skill-tag">SolidWorks</span>
-            <span class="skill-tag">AutoCAD</span>
-            <span class="skill-tag">SolidCAM</span>
-            <span class="skill-tag">HSMWorks</span>
-          </div>
-        </div>
-
-        <div class="skill-group">
-          <div class="skill-group-name">Programming</div>
-          <div class="skill-tags">
-            <span class="skill-tag">Python</span>
-            <span class="skill-tag">VBA</span>
-            <span class="skill-tag">Pine Script</span>
-            <span class="skill-tag">Playwright</span>
-            <span class="skill-tag">HTML/CSS</span>
-          </div>
-        </div>
-
-        <div class="skill-group">
-          <div class="skill-group-name">Manufacturing</div>
-          <div class="skill-tags">
-            <span class="skill-tag">CNC Machining</span>
-            <span class="skill-tag">Sheet Metal</span>
-            <span class="skill-tag">Welding</span>
-            <span class="skill-tag">PLC / Automation</span>
-          </div>
-        </div>
-
-        <div class="skill-group">
-          <div class="skill-group-name">Other</div>
-          <div class="skill-tags">
-            <span class="skill-tag">Anthropic API</span>
-            <span class="skill-tag">Git / GitHub</span>
-            <span class="skill-tag">Google Drive API</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- LANGUAGES -->
-      <div class="aside-sec">
-        <div class="sec-label">Languages</div>
-        <div class="lang-row">
-          <span class="lang-name">Turkish</span>
-          <span class="lang-level">Native</span>
-        </div>
-        <div class="lang-row">
-          <span class="lang-name">English</span>
-          <span class="lang-level">Advanced</span>
-        </div>
-        <div class="lang-row">
-          <span class="lang-name">German</span>
-          <span class="lang-level">Beginner</span>
-        </div>
-      </div>
-
-      <!-- KEY CLIENTS -->
-      <div class="aside-sec">
-        <div class="sec-label">Key Clients</div>
-        <div class="client-list">
-          <span class="client-tag">THY</span>
-          <span class="client-tag">Baykar</span>
-          <span class="client-tag">Aselsan</span>
-          <span class="client-tag">Adöksan</span>
-          <span class="client-tag">Gratis</span>
-          <span class="client-tag">Ukinox</span>
-          <span class="client-tag">AST</span>
-          <span class="client-tag">AKO</span>
-          <span class="client-tag">Tatbak</span>
-          <span class="client-tag">Alterna</span>
-          <span class="client-tag">Krom Evye</span>
-          <span class="client-tag">Divan</span>
-        </div>
-      </div>
-
-      <!-- CERTIFICATIONS -->
-      <div class="aside-sec">
-        <div class="sec-label">Certifications &amp; Other</div>
-        <div class="cert-item">Digital Marketing Fundamentals<br><span style="font-size:0.7rem;color:var(--text-dim)">Google / Udemy</span></div>
-        <div class="cert-item">German Language Training<br><span style="font-size:0.7rem;color:var(--text-dim)">Goethe Institut</span></div>
-        <div class="cert-item">International Leadership Program<br><span style="font-size:0.7rem;color:var(--text-dim)">Lions Club — Denmark</span></div>
-      </div>
-
-      <!-- PERSONAL -->
-      <div class="aside-sec">
-        <div class="sec-label">Personal</div>
-        <div class="personal-row">
-          <span class="personal-key">D.O.B.</span>
-          <span>1987</span>
-        </div>
-        <div class="personal-row">
-          <span class="personal-key">Licence</span>
-          <span>Class B</span>
-        </div>
-        <div class="personal-row">
-          <span class="personal-key">Military</span>
-          <span>Completed</span>
-        </div>
-      </div>
-
-    </div><!-- /aside -->
   </div><!-- /body -->
 
-  <!-- PRINT BAR -->
-  <div class="print-bar">
-    <button class="btn-print" onclick="window.print()">Save as PDF</button>
-    <a class="btn-lang" href="cv_tr.html">Türkçe versiyon</a>
+  <!-- FOOTER -->
+  <div class="footer">
+    <button class="btn-pdf" onclick="window.print()">Save as PDF</button>
+    <a class="btn-tr" href="cv_tr.html">Türkçe Versiyon</a>
   </div>
 
 </div><!-- /page -->
-
 </body>
 </html>
