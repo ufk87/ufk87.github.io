@@ -1,0 +1,481 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Okumaks</title>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Okumaks">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#eef0f3" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#12161d" media="(prefers-color-scheme: dark)">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="icon" type="image/png" href="icon-192.png">
+<link rel="manifest" href="manifest.webmanifest">
+<style>
+html{box-sizing:border-box;color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+*,*::before,*::after{box-sizing:inherit}
+body{margin:0;font:14px/1.4 system-ui,-apple-system,sans-serif}
+img{max-width:100%}
+[hidden]{display:none!important}
+</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: one-screen reader — slim top bar, centered word stage with a fixed focus guide, thumb-reachable controls at the bottom */
+:root{
+  --bg:#eef0f3; --surface:#ffffff; --ink:#1b2230; --muted:#6a7383; --line:#d5d9e0;
+  --focus:#c8402a; --accent:#2b4c7e; --accent-ink:#ffffff;
+  --f-word:"Atkinson Hyperlegible",system-ui,-apple-system,sans-serif;
+  --f-ui:"Atkinson Hyperlegible",system-ui,-apple-system,sans-serif;
+  --f-num:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#12161d; --surface:#1b212b; --ink:#e7ebf1; --muted:#8a93a3; --line:#2c3441;
+  --focus:#ff7a5c; --accent:#7fa3dc; --accent-ink:#0f141b; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#12161d; --surface:#1b212b; --ink:#e7ebf1; --muted:#8a93a3; --line:#2c3441;
+  --focus:#ff7a5c; --accent:#7fa3dc; --accent-ink:#0f141b; color-scheme:dark}
+:root[data-mode="day"]{
+  --bg:#eef0f3; --surface:#ffffff; --ink:#1b2230; --muted:#6a7383; --line:#d5d9e0;
+  --focus:#c8402a; --accent:#2b4c7e; --accent-ink:#ffffff; color-scheme:light}
+/* Gece: OLED için tam siyah zemin, mavi ışığı kesen kehribar yazı, düşük parlaklık */
+:root[data-mode="night"]{
+  --bg:#000000; --surface:#0e0b08; --ink:#d9a86c; --muted:#7d6649; --line:#2a2117;
+  --focus:#e0623a; --accent:#a87a45; --accent-ink:#000000; color-scheme:dark}
+html,body{height:100%}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-ui);font-size:15px;-webkit-tap-highlight-color:transparent}
+.app{height:100%;display:flex;flex-direction:column;padding-inline:16px;max-width:760px;margin:0 auto;box-sizing:border-box}
+header{display:flex;align-items:center;justify-content:space-between;gap:12px;padding-block:12px}
+header h1{font-size:18px;margin:0;letter-spacing:.01em}
+header .row{flex-wrap:wrap;justify-content:flex-end;gap:8px}
+@media (max-width:440px){header .lbl{display:none}}
+header h1 span{color:var(--focus)}
+.btn{font:inherit;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:10px;padding:9px 14px;cursor:pointer}
+.btn:focus-visible,.icon:focus-visible,input:focus-visible,textarea:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.btn.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.meta{font-family:var(--f-num);font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums}
+
+.stage{flex:1;display:flex;flex-direction:column;justify-content:center;align-items:stretch;min-height:200px;cursor:pointer;user-select:none;-webkit-user-select:none}
+.guide{position:relative;height:120px;border-top:1px solid var(--line);border-bottom:1px solid var(--line);overflow:hidden}
+.guide::before,.guide::after{content:"";position:absolute;left:calc(38% - 1px);width:2px;height:12px;background:var(--focus);opacity:.55}
+.guide::before{top:0}.guide::after{bottom:0}
+.word{position:absolute;top:50%;transform:translateY(-50%);left:0;right:0;font-family:var(--f-word);font-size:clamp(34px,9vw,56px);white-space:nowrap;display:flex;line-height:1.2}
+.word .pre{width:38%;text-align:right;flex:none}
+.word .orp{color:var(--focus);font-weight:700}
+.word .post{flex:1}
+.hint{text-align:center;color:var(--muted);font-size:13px;margin-top:14px;min-height:1.2em}
+.context{margin-top:18px;color:var(--muted);font-size:14px;line-height:1.55;max-height:5.2em;overflow:hidden;text-align:center}
+.context b{color:var(--ink)}
+
+.controls{display:flex;flex-direction:column;gap:12px;padding-block:12px calc(14px + env(safe-area-inset-bottom,0px))}
+.row{display:flex;align-items:center;gap:10px}
+.row.center{justify-content:center;gap:14px}
+input[type=range]{flex:1;min-width:0;accent-color:var(--accent)}
+.icon{width:48px;height:48px;border-radius:50%;border:1px solid var(--line);background:var(--surface);color:var(--ink);font-size:18px;cursor:pointer;display:grid;place-items:center}
+.icon.play{width:64px;height:64px;background:var(--accent);color:var(--accent-ink);border-color:var(--accent);font-size:24px}
+.wpm{font-family:var(--f-num);min-width:7ch;text-align:right;font-variant-numeric:tabular-nums}
+.toggles{display:flex;flex-wrap:wrap;gap:8px 16px;font-size:13px;color:var(--muted)}
+.toggles label{display:flex;align-items:center;gap:6px;cursor:pointer}
+.toggles select{font:inherit;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:3px 6px}
+
+.focusmode header,.focusmode .controls .toggles,.focusmode .context{visibility:hidden}
+
+.sheet{position:fixed;inset:0;background:color-mix(in srgb,var(--bg) 60%,transparent);display:flex;align-items:flex-end;justify-content:center;z-index:10}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:18px 18px 0 0;width:100%;max-width:760px;box-sizing:border-box;padding:18px 16px calc(18px + env(safe-area-inset-bottom,0px));display:flex;flex-direction:column;gap:12px;max-height:88%;overflow:auto}
+.panel h2{margin:0;font-size:17px}
+.panel p{margin:0;color:var(--muted);font-size:13px;line-height:1.5}
+textarea{width:100%;box-sizing:border-box;min-height:180px;font:15px/1.5 var(--f-ui);background:var(--bg);color:var(--ink);border:1px solid var(--line);border-radius:10px;padding:10px;resize:vertical}
+.filebox{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.status{font-size:13px;color:var(--muted);min-height:1.2em}
+.status.err{color:var(--focus)}
+.hapt{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none;overflow:hidden}
+@media (prefers-reduced-motion: reduce){*{transition:none!important}}
+</style>
+
+</head>
+<body>
+<div class="app" id="app">
+  <header>
+    <h1>Okum<span>a</span>ks</h1>
+    <div class="row">
+      <span class="meta" id="remain"></span>
+      <button class="btn" id="modeBtn" aria-label="Görünüm: Otomatik"><span id="modeIco">◐</span><span class="lbl" id="modeLbl"> Otomatik</span></button>
+      <button class="btn" id="openLib">Metin yükle</button>
+    </div>
+  </header>
+
+  <div class="stage" id="stage" aria-live="off">
+    <div class="guide"><div class="word" id="word"><span class="pre"></span><span class="orp"></span><span class="post"></span></div></div>
+    <div class="hint" id="hint">Oynat'a bas ya da ekrana dokun</div>
+    <div class="context" id="context"></div>
+  </div>
+
+  <div class="controls">
+    <div class="row">
+      <span class="meta" id="pos">0 / 0</span>
+      <input type="range" id="progress" min="0" max="0" value="0" aria-label="Metindeki konum">
+    </div>
+    <div class="row center">
+      <button class="icon" id="backS" aria-label="Önceki cümle">⏮</button>
+      <button class="icon" id="back" aria-label="10 kelime geri">↺</button>
+      <button class="icon play" id="play" aria-label="Oynat">▶</button>
+      <button class="icon" id="fwd" aria-label="10 kelime ileri">↻</button>
+      <button class="icon" id="fwdS" aria-label="Sonraki cümle">⏭</button>
+    </div>
+    <div class="row">
+      <span class="meta">Hız</span>
+      <input type="range" id="speed" min="100" max="900" step="25" value="300" aria-label="Dakikadaki kelime">
+      <span class="wpm meta" id="wpmLabel">300 kpd</span>
+    </div>
+    <div class="toggles">
+      <label for="optLen">Uzun kelimede yavaşla
+        <select id="optLen"><option value="1">Az</option><option value="2" selected>Orta</option><option value="3">Çok</option></select></label>
+      <label><input type="checkbox" id="optPause" checked> Noktalamada yavaşla</label>
+      <label><input type="checkbox" id="optRamp" checked> Yavaş başla</label>
+      <label><input type="checkbox" id="optRewind" checked> Cümle başından devam et</label>
+      <label><input type="checkbox" id="optHaptic"> Titreşim (deneysel)</label>
+      <label><input type="checkbox" id="optCtx" checked> Bağlamı göster</label>
+    </div>
+  </div>
+</div>
+
+<div class="sheet" id="sheet" hidden>
+  <div class="panel" role="dialog" aria-labelledby="libTitle">
+    <h2 id="libTitle">Ne okumak istersin?</h2>
+    <p>PDF, EPUB veya TXT dosyası seç ya da metni aşağıya yapıştır. Dosyalar sadece cihazında işlenir, hiçbir yere gönderilmez.</p>
+    <div class="filebox">
+      <label class="btn primary" for="file">Dosya seç</label>
+      <input type="file" id="file" accept=".pdf,.epub,.txt,application/pdf,application/epub+zip,text/plain" hidden>
+      <span class="status" id="status"></span>
+    </div>
+    <textarea id="paste" placeholder="Metni buraya yapıştır…"></textarea>
+    <div class="row" style="justify-content:flex-end">
+      <button class="btn" id="closeLib">Vazgeç</button>
+      <button class="btn primary" id="usePaste">Bu metni oku</button>
+    </div>
+  </div>
+</div>
+
+<label class="hapt" id="haptLabel"><input type="checkbox" switch id="haptInput"></label>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script>
+const SAMPLE = `Örnek metin. Hızlı okuma uygulamaları RSVP denen bir yöntem kullanır. Kelimeler ekranda tek tek, aynı noktada belirir. Böylece gözlerin satır boyunca kaymasına gerek kalmaz.
+
+Kırmızı harf, gözünün odaklanması gereken noktayı gösterir. Buna en uygun tanıma noktası denir. Kelime ne kadar uzun olursa olsun, bu harf hep aynı yerde durur.
+
+Dakikada 250 kelimeyle başla. Rahat ettikçe hızı yavaş yavaş artır. Cümle sonlarında kısa duraklamalar, anlamayı korumana yardım eder. Ekrana dokunarak istediğin an durdurabilirsin.
+
+Kendi metnini okumak için yukarıdaki Metin yükle düğmesine bas.`;
+
+const $ = id => document.getElementById(id);
+const store = {
+  get(k){try{return JSON.parse(localStorage.getItem(k))}catch(e){return null}},
+  set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
+};
+
+let words=[], i=0, playing=false, raf=0, nextAt=0, blankUntil=0, blankAt=0, rampLeft=0, wakeLock=null, docKey="sample", skipRewind=true;
+let meanP=1, meanN=1, baseSize=48;
+
+/* ---------- Metni kelimelere ayırma ---------- */
+const ABBR=new Set(["dr.","prof.","doç.","av.","vb.","vs.","örn.","bkz.","sn.","yy.","st.","no.","nr.","s.","sf.","mr.","mrs.","ms.","e.g.","i.e.","etc.","vol.","fig.","yrd.","alb.","gen.","ltd.","şti.","a.ş.","tel.","cad.","sok.","mah.","apt.","m.ö.","m.s."]);
+const STOP=new Set(["ve","ile","bir","bu","şu","o","de","da","ki","mi","mı","mu","mü","ne","için","gibi","ama","en","çok","daha","her","olan","olarak","ise","ya","veya","hem","kadar","sonra","önce","ben","sen","biz","siz","onlar","the","a","an","of","to","in","and","is","it","on","for","at","by","or","as","be","was"]);
+const CLOSE="[\"'”’)»\\]]*";
+const reEnd=new RegExp("[.!?…]"+CLOSE+"$"), reComma=new RegExp("[,;:–—]"+CLOSE+"$");
+const isV=c=>/[aeıioöuüâîûAEIİOÖUÜÂÎÛ]/.test(c);
+const lc=w=>w.toLocaleLowerCase("tr");
+function isAbbr(w){const s=lc(w).replace(/["'”’)»\]]+$/,"");return ABBR.has(s)||/^\p{L}\.$/u.test(s)||/^(\p{L}\.){2,}$/u.test(s)}
+
+function splitLong(w){
+  const ch=[...w]; const n=ch.length; if(n<=15) return [w];
+  const parts=Math.ceil(n/10), size=n/parts, cuts=[];
+  for(let j=1;j<parts;j++){
+    const ideal=Math.round(j*size); let cut=ideal;
+    for(const d of [0,1,-1,2,-2,3,-3]){const k=ideal+d; if(k>2&&k<n-2&&!isV(ch[k])&&isV(ch[k+1])&&isV(ch[k-1])){cut=k;break}}
+    cuts.push(cut);
+  }
+  const out=[]; let s=0;
+  for(const c of cuts){out.push(ch.slice(s,c).join("")+"-");s=c}
+  out.push(ch.slice(s).join("")); return out;
+}
+
+function tokenize(text){
+  text=text.replace(/\r/g,"").replace(/­/g,"").replace(/(\p{L})[-‐]\n\s*(\p{Ll})/gu,"$1$2");
+  const paras=[];
+  for(const block of text.split(/\n\s*\n/)){
+    let cur="";
+    for(const ln of block.split("\n").map(s=>s.trim()).filter(Boolean)){
+      const breakHere=cur&&((reEnd.test(cur)&&/^[\p{Lu}\d"“'«(]/u.test(ln))||/^[•▪◦\-–—*]\s/.test(ln)||/^\d+[.)]\s/.test(ln));
+      if(breakHere){paras.push(cur);cur=ln} else cur=cur?cur+" "+ln:ln;
+    }
+    if(cur) paras.push(cur);
+  }
+  const out=[];
+  for(const p of paras){
+    const ws=p.split(/\s+/).filter(Boolean);
+    ws.forEach((w,k)=>{splitLong(w).forEach(piece=>out.push({w:piece})); if(k===ws.length-1) out[out.length-1].para=true});
+  }
+  for(let k=0;k<out.length;k++){
+    const t=out[k], nx=out[k+1], w=t.w;
+    const punctEnd=reEnd.test(w)&&!isAbbr(w);
+    t.end=!!t.para||(punctEnd&&(!nx||/^[\p{Lu}\d"“'«(‘]/u.test(nx.w)));
+    t.comma=!t.end&&(punctEnd||reComma.test(w)||/^[–—-]$/.test(w));
+    const core=w.replace(/[^\p{L}\p{N}]/gu,""); const n=[...core].length;
+    t.n=n; t.stop=STOP.has(lc(core)); t.digit=/\d/.test(core);
+    t.caps=!t.digit&&n>=2&&core===core.toLocaleUpperCase("tr")&&/\p{L}/u.test(core);
+    t.hy=w.endsWith("-")&&n>3;
+  }
+  // Cümle sonu duraklaması cümlenin uzunluğuna bağlı (Spritz yaklaşımı, kademesiz):
+  // 7 kelimeye kadar 1,0 · 14 kelime ~2,2 · 25+ kelime 3,3 kelime süresi. Paragraf sonu +1,0.
+  let cnt=0;
+  for(const t of out){
+    cnt++;
+    if(t.end){const sp=Math.min(3.3,Math.max(1.0,0.8+0.1*cnt)); t.wis=cnt; t.wp=t.para?sp+1.0:sp; cnt=0}
+    else t.wp=t.comma?0.6:0;
+  }
+  return out;
+}
+// Uzun kelime yavaşlatma: harf başına ek süre (kısa kelime = 0.8 birim)
+const LEN_SLOPE={"1":0.05,"2":0.08,"3":0.11};
+function applyWeights(){
+  const slope=LEN_SLOPE[$("optLen").value]||0.08;
+  for(const t of words){
+    let x=t.n<=3?0.8:Math.min(0.8+slope*12,0.8+slope*(t.n-3));
+    if(t.stop) x*=0.88;
+    if(t.digit) x*=1.3; else if(t.caps) x*=1.15;
+    if(t.hy) x*=1.1;
+    t.wb=x;
+  }
+  computeMeans();
+}
+
+/* ---------- Zamanlama ---------- */
+// Her kelimenin ağırlığı: uzunluk + noktalama. Ortalama ağırlığa bölünerek
+// seçilen kpd değerinin gerçek ortalama hız olması sağlanır.
+function computeMeans(){
+  let a=0,b=0; for(const t of words){a+=t.wb+t.wp;b+=t.wb}
+  meanP=words.length?a/words.length:1; meanN=words.length?b/words.length:1;
+}
+const usePause=()=>$("optPause").checked;
+function weight(k){const t=words[k];return t.wb+(usePause()?t.wp:0)}
+function baseMs(){return 60000/+$("speed").value/(usePause()?meanP:meanN)}
+function dur(k){
+  let d=baseMs()*weight(k);
+  if(rampLeft>0){d*=1+0.6*(rampLeft/8);rampLeft--}
+  return Math.max(45,d);
+}
+function remainingMin(){let s=0;for(let k=i;k<words.length;k++)s+=weight(k);return Math.max(1,Math.round(s*baseMs()/60000))}
+
+/* ---------- Ekrana çizme ---------- */
+const cv=document.createElement("canvas").getContext("2d");
+const FONT='"Atkinson Hyperlegible",system-ui,-apple-system,sans-serif';
+function measureBase(){const el=$("word");el.style.fontSize="";baseSize=parseFloat(getComputedStyle(el).fontSize)||48}
+function orpIndex(len){return len<=1?0:len<=5?1:len<=9?2:len<=13?3:4}
+function paint(text){
+  const wEl=$("word"), [pe,oe,po]=wEl.children;
+  if(!text){pe.textContent=oe.textContent=po.textContent="";return}
+  const core=text.replace(/^[^\p{L}\p{N}]+/u,""); const lead=[...text].length-[...core].length;
+  const clean=core.replace(/[^\p{L}\p{N}]+$/u,"");
+  const chars=[...text]; const o=Math.min(chars.length-1,lead+orpIndex([...clean].length||chars.length));
+  const pre=chars.slice(0,o).join(""), orp=chars[o], post=chars.slice(o+1).join("");
+  cv.font=`400 ${baseSize}px ${FONT}`; const preW=cv.measureText(pre).width, postW=cv.measureText(post).width;
+  cv.font=`700 ${baseSize}px ${FONT}`; const orpW=cv.measureText(orp).width;
+  const box=wEl.clientWidth||320;
+  const left=0.38*box-orpW/2-4, right=0.62*box-orpW/2-4;
+  const sc=Math.max(0.45,Math.min(1,preW?left/preW:1,postW?right/postW:1));
+  wEl.style.fontSize=(baseSize*sc)+"px";
+  wEl.style.transform=`translate(${-orpW*sc/2}px,-50%)`;
+  pe.textContent=pre; oe.textContent=orp; po.textContent=post;
+}
+function showWord(k,now){
+  const t=words[k]; if(!t){paint("");return}
+  if(k>0&&words[k-1].w===t.w&&now){paint("");blankUntil=now+40} else {blankUntil=0;paint(t.w)}
+}
+function renderMeta(full){
+  $("progress").max=Math.max(0,words.length-1); $("progress").value=i;
+  $("pos").textContent=`${Math.min(i+1,words.length)} / ${words.length}`;
+  if(full||i%25===0) $("remain").textContent=`~${remainingMin()} dk kaldı`;
+  const ctx=$("context"); ctx.textContent="";
+  if($("optCtx").checked&&!playing&&words.length){
+    const a=Math.max(0,i-8), b=Math.min(words.length,i+9);
+    for(let k=a;k<b;k++){const s=document.createElement(k===i?"b":"span");s.textContent=words[k].w+" ";ctx.appendChild(s)}
+  }
+}
+function render(){showWord(i,0);renderMeta(true)}
+
+/* ---------- Oynatma döngüsü (ekran yenilemesine senkron) ---------- */
+function haptic(strong){
+  if(!$("optHaptic").checked) return;
+  try{if(navigator.vibrate){navigator.vibrate(strong?25:8);return}}catch(e){}
+  try{$("haptLabel").click(); if(strong) setTimeout(()=>$("haptLabel").click(),60)}catch(e){}
+}
+// Cümle sonunda kelime kendi süresi kadar görünür, kalan duraklama boş ekranla geçer
+function schedBlank(k,now,d){
+  const t=words[k]; blankAt=0;
+  if(t&&t.end&&usePause()){const tot=weight(k); blankAt=now+d*(t.wb/tot)}
+}
+function frame(now){
+  if(!playing) return;
+  if(blankUntil&&now>=blankUntil){blankUntil=0;paint(words[i].w)}
+  if(blankAt&&now>=blankAt){blankAt=0;paint("")}
+  if(now>=nextAt){
+    i++;
+    if(i>=words.length){i=words.length-1;pause();$("hint").textContent="Bitti. Baştan başlamak için ilerleme çubuğunu sola çek.";return}
+    showWord(i,now); renderMeta(false); haptic(words[i].end);
+    const d=dur(i);
+    const start=(now-nextAt>50)?now:nextAt;
+    nextAt=start+d; // birikmiş gecikmeyi taşımadan, kaymasız zamanlama
+    schedBlank(i,start,d);
+    if(i%20===0) store.set("pos:"+docKey,i);
+  }
+  raf=requestAnimationFrame(frame);
+}
+async function play(){
+  if(!words.length) return;
+  if(i>=words.length-1) i=0;
+  if($("optRewind").checked&&!skipRewind&&i>0){
+    let k=i; while(k>0&&!words[k-1].end) k--;
+    i=(i-k<=15)?k:Math.max(0,i-4);
+  }
+  skipRewind=false;
+  playing=true; rampLeft=$("optRamp").checked?8:0;
+  $("play").textContent="❚❚"; $("play").setAttribute("aria-label","Duraklat");
+  $("hint").textContent=""; $("context").textContent="";
+  $("app").classList.add("focusmode");
+  try{wakeLock=await navigator.wakeLock?.request("screen")}catch(e){}
+  const now=performance.now(); showWord(i,now); renderMeta(true); haptic(false);
+  {const d=dur(i); nextAt=now+d; schedBlank(i,now,d);}
+  cancelAnimationFrame(raf); raf=requestAnimationFrame(frame);
+}
+function pause(){
+  const was=playing; playing=false; cancelAnimationFrame(raf); blankUntil=0; blankAt=0;
+  $("play").textContent="▶"; $("play").setAttribute("aria-label","Oynat");
+  $("app").classList.remove("focusmode");
+  if(was) $("hint").textContent="Duraklatıldı";
+  try{wakeLock?.release()}catch(e){} wakeLock=null;
+  store.set("pos:"+docKey,i); render();
+}
+const toggle=()=>playing?pause():play();
+function seek(k){
+  i=Math.min(Math.max(0,k),Math.max(0,words.length-1)); skipRewind=true;
+  if(playing){const now=performance.now();showWord(i,now);renderMeta(true);rampLeft=$("optRamp").checked?4:0;const d=dur(i);nextAt=now+d;schedBlank(i,now,d)}
+  else render();
+}
+const jump=n=>seek(i+n);
+function sentence(dir){
+  let k=i;
+  if(dir<0){while(k>0&&!words[k-1].end)k--; if(k===i&&k>0){k--;while(k>0&&!words[k-1].end)k--}}
+  else{while(k<words.length-1&&!words[k].end)k++; k++}
+  seek(k);
+}
+function load(text,key){
+  pause(); words=tokenize(text); docKey=key; applyWeights();
+  i=Math.min(store.get("pos:"+key)||0,Math.max(0,words.length-1));
+  skipRewind=(i===0); store.set("last",{key});
+  $("hint").textContent=i>0?"Kaldığın yerden devam ediliyor":"Oynat'a bas ya da ekrana dokun";
+  render();
+}
+
+/* File handling */
+async function readPdf(buf){
+  const pdf=await pdfjsLib.getDocument({data:buf}).promise; const parts=[];
+  for(let p=1;p<=pdf.numPages;p++){
+    $("status").textContent=`PDF okunuyor: sayfa ${p}/${pdf.numPages}`;
+    const c=await (await pdf.getPage(p)).getTextContent();
+    let line="",lastY=null;
+    for(const it of c.items){
+      const y=it.transform?it.transform[5]:null;
+      if(lastY!==null&&y!==null&&Math.abs(y-lastY)>14&&/[.!?:]$/.test(line.trim())) line+="\n\n";
+      line+=it.str+(it.hasEOL?" ":""); lastY=y;
+    }
+    parts.push(line.replace(/(\p{L})- (\p{Ll})/gu,"$1$2"));
+  }
+  return parts.join("\n\n");
+}
+async function readEpub(buf){
+  const zip=await JSZip.loadAsync(buf);
+  const parse=(s,t)=>new DOMParser().parseFromString(s,t);
+  const cont=parse(await zip.file("META-INF/container.xml").async("string"),"application/xml");
+  const opfPath=cont.querySelector("rootfile").getAttribute("full-path");
+  const base=opfPath.includes("/")?opfPath.slice(0,opfPath.lastIndexOf("/")+1):"";
+  const opf=parse(await zip.file(opfPath).async("string"),"application/xml");
+  const man={}; opf.querySelectorAll("manifest > item").forEach(n=>man[n.getAttribute("id")]=n.getAttribute("href"));
+  const ids=[...opf.querySelectorAll("spine > itemref")].map(n=>n.getAttribute("idref"));
+  const out=[]; let n=0;
+  for(const id of ids){
+    n++; $("status").textContent=`EPUB okunuyor: bölüm ${n}/${ids.length}`;
+    const href=decodeURIComponent((man[id]||"").split("#")[0]); const f=zip.file(base+href); if(!f) continue;
+    const doc=parse(await f.async("string"),"text/html");
+    const blocks=doc.body?doc.body.querySelectorAll("p,h1,h2,h3,h4,h5,h6,li,blockquote"):[];
+    if(blocks.length) blocks.forEach(b=>{const t=b.textContent.trim();if(t)out.push(t)});
+    else if(doc.body) out.push(doc.body.textContent);
+  }
+  return out.join("\n\n");
+}
+$("file").addEventListener("change",async e=>{
+  const f=e.target.files[0]; if(!f) return;
+  const st=$("status"); st.classList.remove("err"); st.textContent="Dosya açılıyor…";
+  try{
+    const name=f.name.toLowerCase(); let text;
+    if(name.endsWith(".pdf")) text=await readPdf(await f.arrayBuffer());
+    else if(name.endsWith(".epub")) text=await readEpub(await f.arrayBuffer());
+    else text=await f.text();
+    if(!text||text.trim().length<2) throw new Error("Bu dosyada okunabilir metin bulunamadı. Taranmış (resim) PDF olabilir.");
+    load(text,"f:"+f.name+":"+f.size); st.textContent=""; $("sheet").hidden=true;
+  }catch(err){st.classList.add("err");st.textContent=err.message||"Dosya okunamadı. Başka bir dosya dene."}
+  e.target.value="";
+});
+$("usePaste").onclick=()=>{
+  const t=$("paste").value.trim();
+  if(!t){$("status").classList.add("err");$("status").textContent="Önce metin yapıştır.";return}
+  let h=0;for(const c of t.slice(0,500))h=(h*31+c.charCodeAt(0))|0;
+  load(t,"p:"+h+":"+t.length); $("sheet").hidden=true;
+};
+
+/* Wiring */
+$("openLib").onclick=()=>{pause();$("status").textContent="";$("sheet").hidden=false};
+$("closeLib").onclick=()=>$("sheet").hidden=true;
+$("sheet").addEventListener("click",e=>{if(e.target.id==="sheet")$("sheet").hidden=true});
+$("play").onclick=toggle; $("stage").onclick=toggle;
+$("back").onclick=()=>jump(-10); $("fwd").onclick=()=>jump(10);
+$("backS").onclick=()=>sentence(-1); $("fwdS").onclick=()=>sentence(1);
+$("progress").oninput=e=>seek(+e.target.value);
+$("speed").oninput=e=>{$("wpmLabel").textContent=e.target.value+" kpd"; store.set("wpm",+e.target.value); if(!playing) render()};
+["optPause","optRamp","optRewind","optHaptic","optCtx"].forEach(id=>{
+  const s=store.get("opt:"+id); if(s!==null) $(id).checked=s;
+  $(id).onchange=()=>{store.set("opt:"+id,$(id).checked); if(!playing) render()};
+});
+document.addEventListener("keydown",e=>{
+  if(!$("sheet").hidden||e.target.tagName==="TEXTAREA") return;
+  if(e.code==="Space"){e.preventDefault();toggle()}
+  else if(e.key==="ArrowLeft") jump(-10); else if(e.key==="ArrowRight") jump(10);
+  else if(e.key==="ArrowUp"){$("speed").value=+$("speed").value+25;$("speed").oninput({target:$("speed")})}
+  else if(e.key==="ArrowDown"){$("speed").value=+$("speed").value-25;$("speed").oninput({target:$("speed")})}
+});
+document.addEventListener("visibilitychange",()=>{if(document.hidden&&playing)pause()});
+
+{const v=store.get("optLen"); if(v&&LEN_SLOPE[v]) $("optLen").value=v;}
+$("optLen").onchange=()=>{store.set("optLen",$("optLen").value); applyWeights(); if(!playing) render()};
+const MODES=[["auto","◐","Otomatik"],["day","☀","Gündüz"],["night","☾","Gece"]];
+function setMode(m){
+  const r=document.documentElement;
+  if(m==="auto") r.removeAttribute("data-mode"); else r.setAttribute("data-mode",m);
+  const md=MODES.find(x=>x[0]===m)||MODES[0];
+  $("modeIco").textContent=md[1]; $("modeLbl").textContent=" "+md[2]; $("modeBtn").setAttribute("aria-label","Görünüm: "+md[2]);
+  store.set("mode",m);
+}
+$("modeBtn").onclick=()=>{const cur=store.get("mode")||"auto";const k=MODES.findIndex(x=>x[0]===cur);setMode(MODES[(k+1)%MODES.length][0])};
+setMode(store.get("mode")||"auto");
+const savedWpm=store.get("wpm"); if(savedWpm){$("speed").value=savedWpm;$("wpmLabel").textContent=savedWpm+" kpd"}
+measureBase();
+window.addEventListener("resize",()=>{measureBase();if(!playing)render()});
+document.fonts?.ready.then(()=>{measureBase();if(!playing)render()});
+load(SAMPLE,"sample");
+</script>
+
+</body>
+</html>
